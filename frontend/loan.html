@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LendSwift - Loan Application</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="loan-wizard.css">
+</head>
+<body>
+  <div class="app-wrapper">
+    <!-- Navigation Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <a href="index.html" class="logo">
+          <span class="logo-mark">LS</span>
+          <span>LendSwift</span>
+        </a>
+        <nav class="nav-links">
+          <a href="index.html">Home</a>
+          <a href="login.html">Login</a>
+          <a class="active" href="loan.html">Apply</a>
+        </nav>
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+          🌙
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="app-main">
+      <!-- Progress Bar -->
+      <div class="progress-section">
+        <div class="progress-header">
+          <span class="step-indicator">Step <span id="currentStep">1</span> of 8</span>
+          <h1 id="stepTitle">Loan Type Selection</h1>
+        </div>
+        <div class="progress-bar">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="step-indicators">
+          <div class="step-badge active" data-step="1">1</div>
+          <div class="step-badge" data-step="2">2</div>
+          <div class="step-badge" data-step="3">3</div>
+          <div class="step-badge" data-step="4">4</div>
+          <div class="step-badge" data-step="5">5</div>
+          <div class="step-badge" data-step="6">6</div>
+          <div class="step-badge" data-step="7">7</div>
+          <div class="step-badge" data-step="8">8</div>
+        </div>
+      </div>
+
+      <!-- Form Container -->
+      <div class="form-container">
+        <form id="loanForm" class="loan-form">
+          
+          <!-- STEP 1: LOAN TYPE SELECTION -->
+          <section class="form-step active" data-step="1">
+            <h2>Select Your Loan Type</h2>
+            <p class="step-description">Choose the type of loan that best fits your needs.</p>
+            
+            <div class="loan-type-grid">
+              <label class="loan-card">
+                <input type="radio" name="loanType" value="Personal" required>
+                <div class="card-inner">
+                  <h3>Personal Loan</h3>
+                  <p>For personal expenses, education, or travel</p>
+                  <ul class="card-features">
+                    <li>✓ Quick approval</li>
+                    <li>✓ Minimal documentation</li>
+                    <li>✓ Flexible tenure</li>
+                  </ul>
+                </div>
+              </label>
+
+              <label class="loan-card">
+                <input type="radio" name="loanType" value="Home" required>
+                <div class="card-inner">
+                  <h3>Home Loan</h3>
+                  <p>For purchasing or constructing a home</p>
+                  <ul class="card-features">
+                    <li>✓ Long tenure</li>
+                    <li>✓ Lower interest</li>
+                    <li>✓ Tax benefits</li>
+                  </ul>
+                </div>
+              </label>
+
+              <label class="loan-card">
+                <input type="radio" name="loanType" value="Business" required>
+                <div class="card-inner">
+                  <h3>Business Loan</h3>
+                  <p>For starting or expanding your business</p>
+                  <ul class="card-features">
+                    <li>✓ Higher amount</li>
+                    <li>✓ Flexible repayment</li>
+                    <li>✓ Business support</li>
+                  </ul>
+                </div>
+              </label>
+            </div>
+          </section>
+
+          <!-- STEP 2: PERSONAL INFORMATION -->
+          <section class="form-step" data-step="2">
+            <h2>Personal Information</h2>
+            <p class="step-description">Provide your basic details for verification.</p>
+            
+            <div class="form-group">
+              <label for="fullName">Full Name *</label>
+              <input type="text" id="fullName" name="fullName" required placeholder="John Doe">
+              <span class="error-message" id="fullNameError"></span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="dob">Date of Birth *</label>
+                <input type="date" id="dob" name="dob" required>
+                <span class="error-message" id="dobError"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="age">Age</label>
+                <input type="number" id="age" name="age" readOnly placeholder="Calculated automatically">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required placeholder="john@example.com">
+              <span class="error-message" id="emailError"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="mobile">Mobile Number *</label>
+              <input type="tel" id="mobile" name="mobile" required placeholder="9876543210" maxlength="10">
+              <span class="error-message" id="mobileError"></span>
+            </div>
+          </section>
+
+          <!-- STEP 3: KYC VERIFICATION -->
+          <section class="form-step" data-step="3">
+            <h2>KYC Verification</h2>
+            <p class="step-description">Verify your identity documents (Simulation).</p>
+            
+            <div class="form-group">
+              <label for="pan">PAN Number *</label>
+              <input type="text" id="pan" name="pan" required placeholder="ABCDE1234F" maxlength="10" style="text-transform: uppercase;">
+              <small class="hint">Format: AAAAA9999A</small>
+              <span class="error-message" id="panError"></span>
+              <div class="verification-status" id="panStatus"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="aadhaar">Aadhaar Number *</label>
+              <input type="text" id="aadhaar" name="aadhaar" required placeholder="123456789012" maxlength="12">
+              <small class="hint">12 digits (Masked for security)</small>
+              <span class="error-message" id="aadhaarError"></span>
+              <div class="verification-status" id="aadhaarStatus"></div>
+            </div>
+
+            <button type="button" class="btn btn-secondary" id="verifyKycBtn">Verify KYC</button>
+            <div id="verificationMessage" class="verification-message"></div>
+          </section>
+
+          <!-- STEP 4: ADDRESS DETAILS -->
+          <section class="form-step" data-step="4">
+            <h2>Address Details</h2>
+            <p class="step-description">Enter your residential address.</p>
+            
+            <div class="form-group">
+              <label for="pinCode">PIN Code *</label>
+              <input type="text" id="pinCode" name="pinCode" required placeholder="560001" maxlength="6">
+              <small class="hint">6 digits</small>
+              <span class="error-message" id="pinCodeError"></span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="city">City *</label>
+                <input type="text" id="city" name="city" readOnly placeholder="Auto-filled">
+                <span class="error-message" id="cityError"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="state">State *</label>
+                <input type="text" id="state" name="state" readOnly placeholder="Auto-filled">
+                <span class="error-message" id="stateError"></span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="address">Full Address *</label>
+              <textarea id="address" name="address" required placeholder="House no., street, locality..." rows="3"></textarea>
+              <span class="error-message" id="addressError"></span>
+            </div>
+          </section>
+
+          <!-- STEP 5: EMPLOYMENT & INCOME -->
+          <section class="form-step" data-step="5">
+            <h2>Employment & Income</h2>
+            <p class="step-description">Tell us about your employment and income.</p>
+            
+            <div class="form-group">
+              <label for="employmentType">Employment Type *</label>
+              <select id="employmentType" name="employmentType" required>
+                <option value="">Select employment type</option>
+                <option value="Salaried">Salaried</option>
+                <option value="Self-Employed">Self-Employed</option>
+                <option value="Business">Business Owner</option>
+              </select>
+              <span class="error-message" id="employmentTypeError"></span>
+            </div>
+
+            <!-- Salaried Employment -->
+            <div id="salariedFields" class="employment-section" style="display: none;">
+              <div class="form-group">
+                <label for="companyName">Company Name *</label>
+                <input type="text" id="companyName" name="companyName" placeholder="ABC Corporation">
+              </div>
+
+              <div class="form-group">
+                <label for="monthlySalary">Monthly Salary (₹) *</label>
+                <input type="number" id="monthlySalary" name="monthlySalary" placeholder="50000" min="0">
+                <span class="error-message" id="monthlySalaryError"></span>
+              </div>
+            </div>
+
+            <!-- Self-Employed Fields -->
+            <div id="selfEmployedFields" class="employment-section" style="display: none;">
+              <div class="form-group">
+                <label for="businessName">Business Name *</label>
+                <input type="text" id="businessName" name="businessName" placeholder="Your Business Name">
+              </div>
+
+              <div class="form-group">
+                <label for="annualIncome">Annual Income (₹) *</label>
+                <input type="number" id="annualIncome" name="annualIncome" placeholder="600000" min="0">
+                <span class="error-message" id="annualIncomeError"></span>
+              </div>
+            </div>
+
+            <!-- Business Owner Fields -->
+            <div id="businessFields" class="employment-section" style="display: none;">
+              <div class="form-group">
+                <label for="businessNameOwner">Business Name *</label>
+                <input type="text" id="businessNameOwner" name="businessNameOwner" placeholder="Your Business Name">
+              </div>
+
+              <div class="form-group">
+                <label for="businessIncome">Annual Business Income (₹) *</label>
+                <input type="number" id="businessIncome" name="businessIncome" placeholder="1000000" min="0">
+                <span class="error-message" id="businessIncomeError"></span>
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 6: CO-APPLICANT (CONDITIONAL) -->
+          <section class="form-step" data-step="6" id="coApplicantStep" style="display: none;">
+            <h2>Co-Applicant Details</h2>
+            <p class="step-description">Add a co-applicant to strengthen your application (Optional).</p>
+            
+            <div class="form-group checkbox-group">
+              <label>
+                <input type="checkbox" id="hasCoApplicant" name="hasCoApplicant">
+                <span>Add a Co-Applicant?</span>
+              </label>
+            </div>
+
+            <div id="coApplicantFields" style="display: none;">
+              <div class="form-group">
+                <label for="coApplicantName">Co-Applicant Name</label>
+                <input type="text" id="coApplicantName" name="coApplicantName" placeholder="Jane Doe">
+              </div>
+
+              <div class="form-group">
+                <label for="coApplicantRelationship">Relationship *</label>
+                <select id="coApplicantRelationship" name="coApplicantRelationship">
+                  <option value="">Select relationship</option>
+                  <option value="Spouse">Spouse</option>
+                  <option value="Parent">Parent</option>
+                  <option value="Sibling">Sibling</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="coApplicantIncome">Co-Applicant Income (₹)</label>
+                <input type="number" id="coApplicantIncome" name="coApplicantIncome" placeholder="50000" min="0">
+              </div>
+            </div>
+          </section>
+
+          <!-- STEP 7: DOCUMENT UPLOAD & E-SIGNATURE -->
+          <section class="form-step" data-step="7">
+            <h2>Document Upload & E-Signature</h2>
+            <p class="step-description">Upload supporting documents and add your digital signature.</p>
+            
+            <div class="upload-section">
+              <h3>Upload Documents</h3>
+              <div class="upload-area" id="uploadArea">
+                <p>Drag & drop your files here or <span class="link">click to browse</span></p>
+                <p class="upload-hint">Supported: JPG, PNG, PDF (Max 2MB each)</p>
+                <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.pdf" style="display: none;">
+              </div>
+              <ul id="fileList" class="file-list"></ul>
+            </div>
+
+            <div class="signature-section">
+              <h3>E-Signature</h3>
+              <p class="step-description">Draw your signature in the box below.</p>
+              <canvas id="signatureCanvas" class="signature-canvas"></canvas>
+              <div class="signature-actions">
+                <button type="button" class="btn btn-outline" id="clearSignatureBtn">Clear</button>
+                <button type="button" class="btn btn-secondary" id="saveSignatureBtn">Save Signature</button>
+              </div>
+              <div id="signatureStatus" class="signature-status"></div>
+            </div>
+          </section>
+
+          <!-- STEP 8: REVIEW & SUMMARY -->
+          <section class="form-step" data-step="8">
+            <h2>Review & Pre-Approval Summary</h2>
+            <p class="step-description">Review your information and eligibility summary.</p>
+            
+            <div class="summary-container">
+              <div class="summary-card">
+                <h3>Loan Details</h3>
+                <div class="summary-row">
+                  <span>Loan Type:</span>
+                  <strong id="summaryLoanType">-</strong>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <h3>Personal Information</h3>
+                <div class="summary-row">
+                  <span>Full Name:</span>
+                  <strong id="summaryFullName">-</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Age:</span>
+                  <strong id="summaryAge">-</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Email:</span>
+                  <strong id="summaryEmail">-</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Mobile:</span>
+                  <strong id="summaryMobile">-</strong>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <h3>Employment Information</h3>
+                <div class="summary-row">
+                  <span>Employment Type:</span>
+                  <strong id="summaryEmploymentType">-</strong>
+                </div>
+                <div class="summary-row">
+                  <span>Income:</span>
+                  <strong id="summaryIncome">-</strong>
+                </div>
+              </div>
+
+              <div class="summary-card">
+                <h3>Pre-Approval Assessment</h3>
+                <div class="eligibility-score">
+                  <div class="score-circle" id="scoreCircle">
+                    <span id="scoreValue">0</span>%
+                  </div>
+                  <p>Eligibility Score</p>
+                </div>
+                <div class="assessment-details">
+                  <div class="assessment-row">
+                    <span>Approval Status:</span>
+                    <strong id="approvalStatus" class="status-badge">Pending</strong>
+                  </div>
+                  <div class="assessment-row">
+                    <span>Suggested Loan Amount:</span>
+                    <strong id="suggestedAmount">-</strong>
+                  </div>
+                  <div class="assessment-row">
+                    <span>Interest Rate:</span>
+                    <strong id="interestRate">-</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="consent-section">
+              <label class="checkbox-group">
+                <input type="checkbox" id="consentTerms" required>
+                <span>I agree to the <strong>Terms & Conditions</strong> and <strong>Privacy Policy</strong></span>
+              </label>
+              <label class="checkbox-group">
+                <input type="checkbox" id="consentData" required>
+                <span>I consent to share my information for verification purposes</span>
+              </label>
+              <span class="error-message" id="consentError"></span>
+            </div>
+          </section>
+
+          <!-- Form Actions -->
+          <div class="form-actions">
+            <button type="button" class="btn btn-outline" id="prevBtn" style="display: none;">← Previous</button>
+            <button type="button" class="btn btn-primary" id="nextBtn">Next →</button>
+            <button type="submit" class="btn btn-success" id="submitBtn" style="display: none;">Submit Application</button>
+          </div>
+        </form>
+      </div>
+    </main>
+
+    <!-- Success Modal -->
+    <div id="successModal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Application Submitted Successfully!</h2>
+        </div>
+        <div class="modal-body">
+          <div class="success-icon">✓</div>
+          <p id="applicationId" style="font-size: 1.1rem; margin-top: 20px;"></p>
+          <p class="success-message">Your loan application has been submitted successfully. We will review it and contact you within 24 hours.</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-primary" id="closeModalBtn">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Auto-save Indicator -->
+    <div class="autosave-indicator" id="autosaveIndicator">
+      💾 Saving...
+    </div>
+  </div>
+
+  <script src="loan-wizard.js"></script>
+</body>
+</html>

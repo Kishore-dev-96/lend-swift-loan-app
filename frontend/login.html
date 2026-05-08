@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LendSwift Login / Register</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="kyc.css">
+  </head>
+  <body data-page="login">
+    <header class="navbar" data-navbar>
+      <a class="brand" href="index.html">
+        <span class="brand-mark">LS</span>
+        <span>LendSwift</span>
+      </a>
+      <nav class="nav-links always-visible" aria-label="KYC navigation">
+        <a href="kyc-upload.html">KYC Upload</a>
+        <a href="otp.html">OTP</a>
+        <a href="profile.html">Profile</a>
+        <a class="active" href="login.html">Login / Register</a>
+      </nav>
+    </header>
+
+    <main class="kyc-main">
+      <section class="kyc-hero">
+        <p class="eyebrow">Secure fintech authentication</p>
+        <h1>Login or register securely</h1>
+        <p>Use mobile OTP or email/password to access your LendSwift profile safely.</p>
+      </section>
+
+      <section class="kyc-shell">
+        <div class="kyc-card">
+          <div class="form-header">
+            <h2>Email + Password</h2>
+            <p>Create an account or login in a secure, hashed-password flow.</p>
+          </div>
+
+          <form class="auth-form" data-register-form>
+            <label class="field">
+              <span>Full name (optional)</span>
+              <input name="name" placeholder="First Last" autocomplete="name">
+            </label>
+            <label class="field">
+              <span>Email address</span>
+              <input name="email" type="email" placeholder="name@example.com" required autocomplete="email">
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input name="password" type="password" minlength="8" placeholder="At least 8 characters" required autocomplete="new-password">
+            </label>
+            <div class="status-box hidden" data-register-status></div>
+            <button class="btn btn-primary form-submit" type="submit">Register</button>
+          </form>
+
+          <form class="auth-form" data-login-form>
+            <label class="field">
+              <span>Existing account email</span>
+              <input name="email" type="email" placeholder="name@example.com" required autocomplete="email">
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input name="password" type="password" placeholder="Password" required autocomplete="current-password">
+            </label>
+            <div class="status-box hidden" data-login-status></div>
+            <button class="btn btn-accent form-submit" type="submit">Login</button>
+          </form>
+        </div>
+
+        <div class="kyc-card">
+          <div class="form-header">
+            <h2>Mobile OTP Login</h2>
+            <p>Login directly with the user-provided mobile number and OTP sent to that number.</p>
+          </div>
+
+          <form class="auth-form" data-mobile-send-form>
+            <label class="field">
+              <span>Mobile number</span>
+              <input name="mobile" maxlength="10" inputmode="numeric" placeholder="9876543210" required>
+            </label>
+            <div class="status-box hidden" data-mobile-send-status></div>
+            <button class="btn btn-primary form-submit" type="submit">Send OTP</button>
+          </form>
+
+          <form class="auth-form" data-mobile-login-form>
+            <label class="field">
+              <span>Mobile number</span>
+              <input name="mobile" maxlength="10" inputmode="numeric" placeholder="9876543210" required>
+            </label>
+            <label class="field">
+              <span>OTP code</span>
+              <input name="otp" maxlength="6" inputmode="numeric" placeholder="123456" required>
+            </label>
+            <div class="status-box hidden" data-mobile-login-status></div>
+            <button class="btn btn-accent form-submit" type="submit">Verify & Login</button>
+          </form>
+        </div>
+      </section>
+
+      <p class="project-disclaimer">
+        This project uses OCR-based document processing for demonstration purposes only. It does not connect
+        to UIDAI or government databases.
+      </p>
+    </main>
+
+    <script src="login.js"></script>
+  </body>
+</html>

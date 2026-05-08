@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LendSwift Profile Review</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="kyc.css">
+  </head>
+  <body data-page="profile">
+    <header class="navbar" data-navbar>
+      <a class="brand" href="index.html">
+        <span class="brand-mark">LS</span>
+        <span>LendSwift</span>
+      </a>
+      <nav class="nav-links always-visible" aria-label="KYC navigation">
+        <a href="kyc-upload.html">KYC Upload</a>
+        <a href="otp.html">OTP</a>
+        <a class="active" href="profile.html">Profile</a>
+        <a href="login.html">Login / Register</a>
+      </nav>
+    </header>
+
+    <main class="kyc-main">
+      <section class="kyc-hero">
+        <p class="eyebrow">Partially verified profile</p>
+        <h1>Review extracted profile</h1>
+        <p>OCR creates about 70% of the profile automatically. Sensitive identifiers are masked or hashed.</p>
+      </section>
+
+      <section class="kyc-card profile-card">
+        <div class="profile-meter">
+          <span>70%</span>
+          <div>
+            <strong>Partially Verified Profile</strong>
+            <p>Review extracted details and confirm your profile before mobile verification.</p>
+          </div>
+        </div>
+
+        <div class="profile-status-banner" data-mobile-status>
+          <strong>Mobile verification pending.</strong>
+          <p>Verify your mobile number to complete the profile and enable login.</p>
+        </div>
+
+        <form class="profile-form" data-kyc-confirm-form>
+          <div class="profile-fields">
+            <label class="field">
+              <span>Full Name</span>
+              <input name="name" type="text" required>
+            </label>
+            <label class="field">
+              <span>Date of Birth</span>
+              <input name="dob" type="text" placeholder="DD-MM-YYYY" required>
+            </label>
+            <label class="field">
+              <span>PAN Number</span>
+              <input name="pan_number" type="text" maxlength="10" required>
+            </label>
+            <label class="field">
+              <span>Masked Aadhaar</span>
+              <input name="masked_aadhaar_number" type="text" maxlength="14" placeholder="XXXX-XXXX-1234" required>
+            </label>
+            <label class="field wide">
+              <span>Address</span>
+              <textarea name="address" rows="4" required></textarea>
+            </label>
+          </div>
+
+          <div class="status-box hidden" data-profile-status></div>
+          <button class="btn btn-primary form-submit" type="submit">Confirm profile</button>
+        </form>
+
+        <p class="project-disclaimer">
+          This project uses OCR-based document processing for demonstration purposes only. It does not connect
+          to UIDAI or government databases.
+        </p>
+      </section>
+    </main>
+
+    <script src="kyc.js"></script>
+  </body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LendSwift KYC Upload</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="kyc.css">
+  </head>
+  <body data-page="kyc-upload">
+    <header class="navbar" data-navbar>
+      <a class="brand" href="index.html">
+        <span class="brand-mark">LS</span>
+        <span>LendSwift</span>
+      </a>
+      <nav class="nav-links always-visible" aria-label="KYC navigation">
+        <a class="active" href="kyc-upload.html">KYC Upload</a>
+        <a href="otp.html">OTP</a>
+        <a href="profile.html">Profile</a>
+        <a href="login.html">Login / Register</a>
+      </nav>
+    </header>
+
+    <main class="kyc-main">
+      <section class="kyc-hero">
+        <p class="eyebrow">Safe OCR-based KYC</p>
+        <h1>Verify documents with consent</h1>
+        <p>
+          Upload Aadhaar and PAN document images for OCR-based profile creation. LendSwift does not connect
+          to UIDAI, Income Tax, or government databases.
+        </p>
+      </section>
+
+      <section class="kyc-shell">
+        <aside class="kyc-progress">
+          <span>70%</span>
+          <strong>KYC completion after document OCR</strong>
+          <div class="progress-track"><span style="width: 70%"></span></div>
+          <ol>
+            <li class="active">Upload documents</li>
+            <li>Review profile</li>
+            <li>Verify mobile OTP</li>
+          </ol>
+        </aside>
+
+        <form class="kyc-card" data-kyc-upload-form>
+          <div class="form-header">
+            <h2>Document Upload + Consent</h2>
+            <p>Accepted formats: JPG, PNG, PDF. Maximum size: 5MB each.</p>
+          </div>
+
+          <label class="field">
+            <span>Aadhaar document</span>
+            <input type="file" name="aadhaar_file" accept=".jpg,.jpeg,.png,.pdf" required>
+            <small>Only the last 4 Aadhaar digits are stored after OCR.</small>
+          </label>
+
+          <label class="field">
+            <span>PAN document</span>
+            <input type="file" name="pan_file" accept=".jpg,.jpeg,.png,.pdf" required>
+            <small>PAN is stored as a secure salted hash.</small>
+          </label>
+
+          <label class="consent-row">
+            <input type="checkbox" name="consent" required>
+            <span>I consent to use my documents for verification</span>
+          </label>
+
+          <p class="project-disclaimer">
+            This project uses OCR-based document processing for demonstration purposes only. It does not connect
+            to UIDAI or government databases.
+          </p>
+
+          <div class="status-box hidden" data-kyc-status></div>
+          <button class="btn btn-primary form-submit" type="submit">Process Documents</button>
+        </form>
+      </section>
+    </main>
+
+    <script src="kyc.js"></script>
+  </body>
+</html>

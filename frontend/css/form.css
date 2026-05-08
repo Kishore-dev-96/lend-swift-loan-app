@@ -1,0 +1,282 @@
+.resume-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 18px;
+  padding: 14px;
+  border: 1px solid rgba(217, 119, 6, 0.45);
+  border-radius: var(--radius);
+  background: #fff7ed;
+}
+
+body.high-contrast .resume-banner {
+  background: var(--surface-strong);
+}
+
+.form-step {
+  display: none;
+}
+
+.form-step.active {
+  display: block;
+}
+
+.step-heading {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.step-heading p:not(.eyebrow) {
+  max-width: 680px;
+  color: var(--muted);
+}
+
+.field-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.field,
+.choice-field,
+.option-card,
+.checkbox-row,
+.notice-panel,
+.signature-placeholder,
+.summary-card,
+.document-card,
+.affordability-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  padding: 12px;
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.field span,
+.choice-field legend {
+  color: var(--text);
+  font-weight: 800;
+}
+
+.field input,
+.field select,
+.assistant-input input {
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 12px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.field input[aria-invalid="true"],
+.field select[aria-invalid="true"] {
+  border-color: var(--red);
+  background: #fff7ed;
+}
+
+.field-hint {
+  color: var(--muted);
+}
+
+.field-error {
+  min-height: 1.2em;
+  color: var(--red);
+  font-size: 0.9rem;
+}
+
+.choice-field {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 12px;
+}
+
+.choice-field legend {
+  width: 100%;
+}
+
+.choice-field label,
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.loan-type-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.option-card {
+  display: grid;
+  gap: 8px;
+  min-height: 134px;
+  padding: 14px;
+}
+
+.option-card:has(input:checked) {
+  border-color: var(--green);
+  box-shadow: inset 0 0 0 2px rgba(22, 138, 68, 0.18);
+}
+
+.option-card span {
+  font-weight: 900;
+  color: var(--navy);
+}
+
+.option-card small {
+  color: var(--muted);
+}
+
+.affordability-panel {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin-top: 16px;
+  padding: 14px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 8px;
+  border-radius: 999px;
+  background: var(--muted);
+}
+
+.affordability-panel.good .status-dot {
+  background: var(--green);
+}
+
+.affordability-panel.warn .status-dot {
+  background: var(--amber);
+}
+
+.affordability-panel.risk .status-dot {
+  background: var(--red);
+}
+
+.affordability-panel p {
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.affordability-panel output {
+  flex: 0 0 auto;
+  color: var(--navy);
+  font-family: "Syne", sans-serif;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.document-checklist {
+  display: grid;
+  gap: 10px;
+}
+
+.document-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px;
+}
+
+.document-card span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  background: #dcfce7;
+  color: #166534;
+  font-weight: 900;
+}
+
+.document-card strong {
+  display: block;
+}
+
+.document-card p {
+  color: var(--muted);
+}
+
+.notice-panel {
+  margin-bottom: 14px;
+  padding: 14px;
+  border-left: 4px solid var(--amber);
+}
+
+.checkbox-row {
+  margin-top: 10px;
+  padding: 12px;
+}
+
+.signature-placeholder {
+  display: grid;
+  place-items: center;
+  min-height: 210px;
+  color: var(--muted);
+  background:
+    repeating-linear-gradient(0deg, transparent 0 38px, rgba(100, 116, 139, 0.13) 39px 40px),
+    var(--surface);
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.summary-card {
+  padding: 12px;
+}
+
+.summary-card strong {
+  display: block;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.summary-card span {
+  overflow-wrap: anywhere;
+  font-weight: 800;
+}
+
+.form-actions {
+  justify-content: space-between;
+  margin-top: 28px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 760px) {
+  .field-grid,
+  .loan-type-grid,
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .affordability-panel,
+  .resume-banner {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

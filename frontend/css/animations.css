@@ -1,0 +1,32 @@
+@media (prefers-reduced-motion: no-preference) {
+  .form-step.active {
+    animation: step-in 220ms ease-out;
+  }
+
+  .primary-button,
+  .secondary-button,
+  .icon-button,
+  .text-button,
+  .option-card,
+  .step-list button {
+    transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease, box-shadow 160ms ease;
+  }
+
+  .primary-button:hover,
+  .secondary-button:hover,
+  .icon-button:hover,
+  .text-button:hover {
+    transform: translateY(-1px);
+  }
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
