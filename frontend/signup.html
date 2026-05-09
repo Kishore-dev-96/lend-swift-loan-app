@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - LendSwift AI</title>
+    <meta name="description" content="Create your LendSwift AI account for AI-powered loan insights">
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="signup">
+    <!-- Navbar -->
+    <header class="navbar" data-navbar>
+        <a class="brand" href="index.html" aria-label="LendSwift home">
+            <span class="brand-mark">LS</span>
+            <span>LendSwift AI</span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu-toggle>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav-links" data-nav-links aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="index.html#features">Features</a>
+            <a href="index.html#about">About</a>
+            <a href="login.html">Login</a>
+            <a href="signup.html" class="active">Sign Up</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main class="auth-main">
+        <div class="auth-container">
+            <!-- Left Panel - Branding -->
+            <div class="auth-panel auth-panel-left">
+                <div class="auth-branding">
+                    <div class="brand-logo">
+                        <span class="brand-mark">LS</span>
+                        <span class="brand-text">LendSwift AI</span>
+                    </div>
+                    <h1>Join the Future of Smart Lending</h1>
+                    <p>Create your account and unlock AI-powered loan insights, instant eligibility analysis, and personalized financial recommendations.</p>
+
+                    <div class="auth-features">
+                        <div class="feature-item">
+                            <div class="feature-icon">🤖</div>
+                            <div class="feature-text">
+                                <strong>AI-Powered Analysis</strong>
+                                <span>Get instant loan recommendations</span>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">🔒</div>
+                            <div class="feature-text">
+                                <strong>Bank-Grade Security</strong>
+                                <span>Your data is protected with enterprise security</span>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">⚡</div>
+                            <div class="feature-text">
+                                <strong>Instant Insights</strong>
+                                <span>Know your eligibility in seconds</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Signup Form -->
+            <div class="auth-panel auth-panel-right">
+                <div class="auth-form-container">
+                    <div class="auth-header">
+                        <h2>Create Your Account</h2>
+                        <p>Join thousands of users getting smarter with their finances</p>
+                    </div>
+
+                    <!-- Status Messages -->
+                    <div class="status-container">
+                        <div class="status-message status-success hidden" id="success-message">
+                            <div class="status-icon">✓</div>
+                            <div class="status-text">Account created successfully! Redirecting...</div>
+                        </div>
+                        <div class="status-message status-error hidden" id="error-message">
+                            <div class="status-icon">⚠</div>
+                            <div class="status-text" id="error-text"></div>
+                        </div>
+                    </div>
+
+                    <form class="auth-form" id="signup-form" novalidate>
+                        <!-- Full Name -->
+                        <div class="form-group">
+                            <label for="fullName" class="form-label">Full Name *</label>
+                            <div class="input-container">
+                                <input
+                                    type="text"
+                                    id="fullName"
+                                    name="fullName"
+                                    class="form-input"
+                                    placeholder="Enter your full name"
+                                    required
+                                    autocomplete="name"
+                                >
+                                <div class="input-icon">👤</div>
+                            </div>
+                            <div class="error-message" id="fullName-error"></div>
+                        </div>
+
+                        <!-- Email -->
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address *</label>
+                            <div class="input-container">
+                                <input
+                                    type="email"
+                                    id="email"
+                                    name="email"
+                                    class="form-input"
+                                    placeholder="your@email.com"
+                                    required
+                                    autocomplete="email"
+                                >
+                                <div class="input-icon">✉</div>
+                            </div>
+                            <div class="error-message" id="email-error"></div>
+                        </div>
+
+                        <!-- Mobile Number -->
+                        <div class="form-group">
+                            <label for="mobile" class="form-label">Mobile Number *</label>
+                            <div class="input-container">
+                                <input
+                                    type="tel"
+                                    id="mobile"
+                                    name="mobile"
+                                    class="form-input"
+                                    placeholder="9876543210"
+                                    maxlength="10"
+                                    required
+                                    autocomplete="tel"
+                                >
+                                <div class="input-icon">📱</div>
+                            </div>
+                            <div class="error-message" id="mobile-error"></div>
+                        </div>
+
+                        <!-- Password -->
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password *</label>
+                            <div class="input-container">
+                                <input
+                                    type="password"
+                                    id="password"
+                                    name="password"
+                                    class="form-input"
+                                    placeholder="Create a strong password"
+                                    required
+                                    autocomplete="new-password"
+                                >
+                                <button type="button" class="password-toggle" id="password-toggle">
+                                    <span class="eye-icon">👁</span>
+                                </button>
+                            </div>
+                            <div class="error-message" id="password-error"></div>
+
+                            <!-- Password Strength Meter -->
+                            <div class="password-strength">
+                                <div class="strength-bars">
+                                    <div class="strength-bar" data-strength="1"></div>
+                                    <div class="strength-bar" data-strength="2"></div>
+                                    <div class="strength-bar" data-strength="3"></div>
+                                    <div class="strength-bar" data-strength="4"></div>
+                                </div>
+                                <div class="strength-text" id="strength-text">Password strength</div>
+                            </div>
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">Confirm Password *</label>
+                            <div class="input-container">
+                                <input
+                                    type="password"
+                                    id="confirmPassword"
+                                    name="confirmPassword"
+                                    class="form-input"
+                                    placeholder="Confirm your password"
+                                    required
+                                    autocomplete="new-password"
+                                >
+                                <button type="button" class="password-toggle" id="confirm-password-toggle">
+                                    <span class="eye-icon">👁</span>
+                                </button>
+                            </div>
+                            <div class="error-message" id="confirmPassword-error"></div>
+                        </div>
+
+                        <!-- Terms and Conditions -->
+                        <div class="form-group">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="terms" name="terms" required>
+                                <span class="checkmark"></span>
+                                <span class="checkbox-text">
+                                    I agree to the <a href="#" class="link">Terms of Service</a> and <a href="#" class="link">Privacy Policy</a>
+                                </span>
+                            </label>
+                            <div class="error-message" id="terms-error"></div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="auth-button" id="signup-button">
+                            <span class="button-text">Create Account</span>
+                            <div class="button-loader hidden">
+                                <div class="spinner"></div>
+                            </div>
+                        </button>
+                    </form>
+
+                    <!-- Alternative Login -->
+                    <div class="auth-alternative">
+                        <p>Already have an account? <a href="login.html" class="link">Sign in here</a></p>
+                    </div>
+
+                    <!-- Social Login (Optional) -->
+                    <div class="social-login">
+                        <div class="divider">
+                            <span>or continue with</span>
+                        </div>
+                        <div class="social-buttons">
+                            <button type="button" class="social-button google-btn" disabled>
+                                <span class="social-icon">G</span>
+                                Google
+                            </button>
+                            <button type="button" class="social-button facebook-btn" disabled>
+                                <span class="social-icon">f</span>
+                                Facebook
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/navbar.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/signup.js"></script>
+</body>
+</html></content>
+<parameter name="filePath">c:\Users\middi\Documents\Codex\2026-05-08\files-mentioned-by-the-user-my\frontend\signup.html
