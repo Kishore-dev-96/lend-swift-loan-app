@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - LendSwift AI</title>
+    <meta name="description" content="Your LendSwift AI dashboard - manage loans and view insights">
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body data-page="dashboard">
+    <!-- Navbar -->
+    <header class="navbar" data-navbar>
+        <a class="brand" href="index.html" aria-label="LendSwift home">
+            <span class="brand-mark">LS</span>
+            <span>LendSwift AI</span>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu-toggle>
+            <span></span>
+            <span></span>
+        </button>
+
+        <nav class="nav-links" data-nav-links aria-label="Main navigation">
+            <a href="index.html">Home</a>
+            <a href="loan-application.html">Apply</a>
+            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="profile.html">Profile</a>
+            <a href="#" id="logout-link">Logout</a>
+        </nav>
+    </header>
+
+    <!-- Main Dashboard -->
+    <main class="dashboard-main">
+        <div class="dashboard-container">
+            <!-- Welcome Section -->
+            <div class="dashboard-header">
+                <div class="welcome-section">
+                    <h1>Welcome back, <span id="user-name">User</span>!</h1>
+                    <p>Here's your loan application overview and insights</p>
+                </div>
+                <div class="quick-actions">
+                    <a href="loan-application.html" class="action-button primary">
+                        <span class="action-icon">➕</span>
+                        New Application
+                    </a>
+                    <a href="profile.html" class="action-button secondary">
+                        <span class="action-icon">👤</span>
+                        Update Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-content">
+                        <h3 id="total-applications">0</h3>
+                        <p>Total Applications</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏳</div>
+                    <div class="stat-content">
+                        <h3 id="pending-applications">0</h3>
+                        <p>Pending Review</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-content">
+                        <h3 id="approved-applications">0</h3>
+                        <p>Approved</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-content">
+                        <h3 id="total-loan-amount">$0</h3>
+                        <p>Total Loan Amount</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Applications -->
+            <div class="applications-section">
+                <div class="section-header">
+                    <h2>Recent Applications</h2>
+                    <a href="loan-application.html" class="view-all-link">View All</a>
+                </div>
+
+                <div class="applications-list" id="applications-list">
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <h3>No applications yet</h3>
+                        <p>Start your first loan application to see it here</p>
+                        <a href="loan-application.html" class="action-button primary">Apply Now</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KYC Status -->
+            <div class="kyc-section">
+                <div class="section-header">
+                    <h2>KYC Verification</h2>
+                    <a href="kyc-upload.html" class="view-all-link">Update</a>
+                </div>
+
+                <div class="kyc-status-card" id="kyc-status">
+                    <div class="kyc-icon">🔍</div>
+                    <div class="kyc-content">
+                        <h3>Verification Status</h3>
+                        <p id="kyc-status-text">Status loading...</p>
+                        <div class="kyc-progress">
+                            <div class="progress-bar" id="kyc-progress-bar">
+                                <div class="progress-fill" id="kyc-progress-fill"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="js/navbar.js"></script>
+    <script src="js/auth-storage.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
