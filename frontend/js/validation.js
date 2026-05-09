@@ -1,166 +1,356 @@
-const verhoeffD = [
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-  [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
-  [2, 3, 4, 0, 1, 7, 8, 9, 5, 6],
-  [3, 4, 0, 1, 2, 8, 9, 5, 6, 7],
-  [4, 0, 1, 2, 3, 9, 5, 6, 7, 8],
-  [5, 9, 8, 7, 6, 0, 4, 3, 2, 1],
-  [6, 5, 9, 8, 7, 1, 0, 4, 3, 2],
-  [7, 6, 5, 9, 8, 2, 1, 0, 4, 3],
-  [8, 7, 6, 5, 9, 3, 2, 1, 0, 4],
-  [9, 8, 7, 6, 5, 4, 3, 2, 1, 0],
-];
+/**
+ * VALIDATION.JS - Centralized Validation Engine
+ * Handles all form validations for each step
+ */
 
-const verhoeffP = [
-  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
-  [1, 5, 7, 6, 2, 8, 3, 0, 9, 4],
-  [5, 8, 0, 3, 7, 9, 6, 1, 4, 2],
-  [8, 9, 1, 6, 0, 4, 3, 5, 2, 7],
-  [9, 4, 5, 3, 1, 2, 6, 8, 7, 0],
-  [4, 2, 8, 6, 5, 7, 3, 9, 0, 1],
-  [2, 7, 9, 3, 8, 0, 6, 4, 1, 5],
-  [7, 0, 4, 6, 9, 1, 3, 2, 5, 8],
-];
+/**
+ * Step 1: Loan Type Validation
+ */
+function validateStep1(formData) {
+  const errors = {};
 
-export function isVerhoeffValid(value) {
-  const digits = String(value || "").replace(/\D/g, "").split("").reverse();
-  let checksum = 0;
-
-  for (let i = 0; i < digits.length; i += 1) {
-    checksum = verhoeffD[checksum][verhoeffP[i % 8][Number(digits[i])]];
+  if (!formData.selectedLoanType || formData.selectedLoanType.trim() === '') {
+    errors.selectedLoanType = 'Please select a loan type';
   }
 
-  return checksum === 0;
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
 }
 
-export function normalizeValue(input) {
-  if (input.type === "radio") {
-    const checked = document.querySelector(`input[name="${input.name}"]:checked`);
-    return checked ? checked.value : "";
+/**
+ * Step 2: Personal Information Validation
+ */
+function validateStep2(formData) {
+  const errors = {};
+
+  // Full Name
+  if (!formData.fullName || formData.fullName.trim() === '') {
+    errors.fullName = 'Full name is required';
+  } else if (formData.fullName.trim().length < 3) {
+    errors.fullName = 'Full name must be at least 3 characters';
+  } else if (!/^[a-zA-Z\s]+$/.test(formData.fullName)) {
+    errors.fullName = 'Full name should contain only letters and spaces';
   }
 
-  if (input.type === "checkbox") return input.checked;
-  return String(input.value || "").trim();
-}
-
-export function getFormData(form) {
-  const data = {};
-  const fields = form.querySelectorAll("input, select, textarea");
-
-  fields.forEach((field) => {
-    if (!field.name) return;
-    if (field.type === "radio") {
-      if (field.checked) data[field.name] = field.value;
-      return;
+  // Date of Birth
+  if (!formData.dob) {
+    errors.dob = 'Date of birth is required';
+  } else {
+    const age = calculateAge(new Date(formData.dob));
+    if (age < 18) {
+      errors.dob = 'You must be at least 18 years old';
+    } else if (age > 80) {
+      errors.dob = 'Please verify your date of birth';
     }
-    if (field.type === "checkbox") {
-      data[field.name] = field.checked;
-      return;
-    }
-    data[field.name] = field.value.trim();
-  });
-
-  return data;
-}
-
-function isVisible(field) {
-  return !field.closest(".hidden") && field.offsetParent !== null;
-}
-
-function requiredForContext(field, formData) {
-  if (field.dataset.required === "true") return true;
-  const name = field.name;
-  if (["businessPurpose"].includes(name)) return formData.loanType === "business";
-  if (["propertyValue"].includes(name)) return formData.loanType === "home";
-  if (["employerName"].includes(name)) return formData.employmentType === "salaried";
-  if (["gstin"].includes(name)) return formData.employmentType === "self-employed";
-  if (["landHolding"].includes(name)) return formData.employmentType === "farmer";
-  return false;
-}
-
-function validateByRule(field, value, formData) {
-  const rule = field.dataset.validator;
-
-  if (!rule && field.type === "email" && value) {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? "" : "Enter a valid email address.";
   }
 
-  switch (rule) {
-    case "email":
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) ? "" : "Enter a valid email address.";
-    case "mobile":
-      return /^[6-9]\d{9}$/.test(value) ? "" : "Enter a 10-digit Indian mobile number starting with 6-9.";
-    case "pan":
-      return /^[A-Z]{5}[0-9]{4}[A-Z]$/.test(value.toUpperCase()) ? "" : "PAN must look like ABCDE1234F.";
-    case "aadhaar":
-      if (!/^\d{12}$/.test(value)) return "Aadhaar must be exactly 12 digits.";
-      return isVerhoeffValid(value) ? "" : "Aadhaar checksum did not pass. Please recheck the number.";
-    case "loanAmount": {
-      const amount = Number(value);
-      if (amount < 50000) return "Minimum loan amount is INR 50,000.";
-      if (formData.loanType === "personal" && amount > 1000000) return "Personal loans above INR 10 lakh need collateral documentation.";
-      if (formData.loanType === "home" && amount > 50000000) return "Home loan demo limit is INR 5 crore.";
-      return "";
-    }
-    case "tenure": {
-      const months = Number(value);
-      return months >= 6 && months <= 360 ? "" : "Tenure must be between 6 and 360 months.";
-    }
-    case "interestRate": {
-      const rate = Number(value);
-      return rate >= 6 && rate <= 30 ? "" : "Use an annual rate between 6% and 30%.";
-    }
-    case "monthlyIncome":
-      return Number(value) >= 5000 ? "" : "Monthly income must be at least INR 5,000.";
-    case "existingEmi":
-      return Number(value || 0) >= 0 ? "" : "Existing EMI cannot be negative.";
-    case "gstin":
-      return /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(value.toUpperCase()) ? "" : "Enter a valid 15-character GSTIN.";
-    case "propertyValue":
-      return Number(value) >= Number(formData.loanAmount || 0) ? "" : "Property value should be equal to or higher than loan amount.";
-    case "businessPurpose":
-      return value ? "" : "Select the business purpose.";
-    case "employerName":
-      return value.length >= 2 ? "" : "Enter employer name.";
-    case "landHolding":
-      return Number(value) > 0 ? "" : "Enter land holding in acres.";
-    case "pincode":
-      return /^\d{6}$/.test(value) ? "" : "PIN code must be exactly 6 digits.";
-    case "yearsAtAddress":
-      return Number(value) >= 0 && Number(value) <= 80 ? "" : "Enter a valid number of years.";
-    default:
-      return "";
-  }
-}
-
-export function validateField(field, formData) {
-  if (!field.name || !isVisible(field)) return "";
-  if (["radio", "checkbox"].includes(field.type)) return "";
-
-  const value = normalizeValue(field);
-  let message = "";
-
-  if (requiredForContext(field, formData) && !value) {
-    message = `${field.dataset.label || field.closest(".field")?.querySelector("span")?.textContent || "This field"} is required.`;
-  } else if (value) {
-    message = validateByRule(field, value, formData);
+  // Email
+  if (!formData.email || formData.email.trim() === '') {
+    errors.email = 'Email address is required';
+  } else if (!isValidEmail(formData.email)) {
+    errors.email = 'Please enter a valid email address';
   }
 
-  field.setAttribute("aria-invalid", message ? "true" : "false");
-  const error = document.querySelector(`[data-error-for="${field.name}"]`);
-  if (error) error.textContent = message;
-  return message;
+  // Mobile
+  if (!formData.mobile || formData.mobile.trim() === '') {
+    errors.mobile = 'Mobile number is required';
+  } else if (!/^[0-9]{10}$/.test(formData.mobile)) {
+    errors.mobile = 'Mobile number must be 10 digits';
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
 }
 
-export function validateStep(stepElement, form) {
-  const formData = getFormData(form);
-  const fields = stepElement.querySelectorAll("input, select, textarea");
+/**
+ * Step 3: KYC Validation
+ */
+function validateStep3(formData) {
+  const errors = {};
+
+  // PAN
+  if (!formData.panNumber || formData.panNumber.trim() === '') {
+    errors.panNumber = 'PAN number is required';
+  } else if (!isValidPAN(formData.panNumber)) {
+    errors.panNumber = 'Invalid PAN format (e.g., AAAAA0000A)';
+  }
+
+  // Aadhaar
+  if (!formData.aadhaarNumber || formData.aadhaarNumber.trim() === '') {
+    errors.aadhaarNumber = 'Aadhaar number is required';
+  } else if (!/^[0-9]{12}$/.test(formData.aadhaarNumber)) {
+    errors.aadhaarNumber = 'Aadhaar must be 12 digits';
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+}
+
+/**
+ * Step 4: Address Validation
+ */
+function validateStep4(formData) {
+  const errors = {};
+
+  // Pincode
+  if (!formData.pincode || formData.pincode.trim() === '') {
+    errors.pincode = 'Postal code is required';
+  } else if (!/^[0-9]{6}$/.test(formData.pincode)) {
+    errors.pincode = 'Postal code must be 6 digits';
+  }
+
+  // City
+  if (!formData.city || formData.city.trim() === '') {
+    errors.city = 'City is required';
+  }
+
+  // State
+  if (!formData.state || formData.state.trim() === '') {
+    errors.state = 'State is required';
+  }
+
+  // Address
+  if (!formData.address || formData.address.trim() === '') {
+    errors.address = 'Full address is required';
+  } else if (formData.address.trim().length < 10) {
+    errors.address = 'Please provide a complete address';
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+}
+
+/**
+ * Step 5: Employment Validation
+ */
+function validateStep5(formData) {
+  const errors = {};
+
+  // Employment Type
+  if (!formData.employmentType || formData.employmentType.trim() === '') {
+    errors.employmentType = 'Employment type is required';
+  }
+
+  // Salaried Employee
+  if (formData.employmentType === 'Salaried') {
+    if (!formData.companyName || formData.companyName.trim() === '') {
+      errors.companyName = 'Company name is required';
+    }
+
+    if (!formData.monthlySalary || formData.monthlySalary === '') {
+      errors.monthlySalary = 'Monthly salary is required';
+    } else if (parseFloat(formData.monthlySalary) <= 0) {
+      errors.monthlySalary = 'Monthly salary must be greater than 0';
+    } else if (parseFloat(formData.monthlySalary) < 10000) {
+      errors.monthlySalary = 'Monthly salary must be at least ₹10,000';
+    }
+  }
+
+  // Self-Employed
+  if (formData.employmentType === 'Self-Employed') {
+    if (!formData.businessName || formData.businessName.trim() === '') {
+      errors.businessName = 'Business name is required';
+    }
+
+    if (!formData.annualIncome || formData.annualIncome === '') {
+      errors.annualIncome = 'Annual income is required';
+    } else if (parseFloat(formData.annualIncome) <= 0) {
+      errors.annualIncome = 'Annual income must be greater than 0';
+    } else if (parseFloat(formData.annualIncome) < 100000) {
+      errors.annualIncome = 'Annual income must be at least ₹1,00,000';
+    }
+  }
+
+  // Freelancer (same as self-employed)
+  if (formData.employmentType === 'Freelancer') {
+    if (!formData.annualIncome || formData.annualIncome === '') {
+      errors.annualIncome = 'Annual income is required';
+    } else if (parseFloat(formData.annualIncome) <= 0) {
+      errors.annualIncome = 'Annual income must be greater than 0';
+    } else if (parseFloat(formData.annualIncome) < 100000) {
+      errors.annualIncome = 'Annual income must be at least ₹1,00,000';
+    }
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+}
+
+/**
+ * Step 6: Co-Applicant Validation
+ */
+function validateStep6(formData) {
+  const errors = {};
+
+  // Only validate if co-applicant is enabled
+  if (formData.coApplicantEnabled) {
+    if (!formData.coApplicantName || formData.coApplicantName.trim() === '') {
+      errors.coApplicantName = 'Co-applicant name is required';
+    } else if (formData.coApplicantName.trim().length < 3) {
+      errors.coApplicantName = 'Name must be at least 3 characters';
+    }
+
+    if (!formData.coApplicantRelationship || formData.coApplicantRelationship === '') {
+      errors.coApplicantRelationship = 'Relationship is required';
+    }
+
+    if (!formData.coApplicantIncome || formData.coApplicantIncome === '') {
+      errors.coApplicantIncome = 'Co-applicant income is required';
+    } else if (parseFloat(formData.coApplicantIncome) <= 0) {
+      errors.coApplicantIncome = 'Income must be greater than 0';
+    }
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+}
+
+/**
+ * Step 7: Documents Validation
+ */
+function validateStep7(formData) {
+  const errors = {};
+
+  // Check if files are actually selected in the input elements
+  const panFileInput = document.getElementById('panFile');
+  const aadhaarFileInput = document.getElementById('aadhaarFile');
+
+  if (!panFileInput || !panFileInput.files || panFileInput.files.length === 0) {
+    errors.panFile = 'PAN document is required';
+  }
+
+  if (!aadhaarFileInput || !aadhaarFileInput.files || aadhaarFileInput.files.length === 0) {
+    errors.aadhaarFile = 'Aadhaar document is required';
+  }
+
+  if (!formData.signature || formData.signature === '') {
+    errors.signature = 'Signature is required - please draw and save your signature';
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+}
+
+/**
+ * Step 8: Review Validation
+ */
+function validateStep8(formData) {
+  const errors = {};
+
+  if (!formData.agreeTerms) {
+    errors.agreeTerms = 'You must agree to the terms and conditions';
+  }
+
+  return {
+    isValid: Object.keys(errors).length === 0,
+    errors
+  };
+}
+
+/**
+ * Main validation function - validates current step
+ */
+function validateStep(stepNumber, formData) {
+  const validators = {
+    1: validateStep1,
+    2: validateStep2,
+    3: validateStep3,
+    4: validateStep4,
+    5: validateStep5,
+    6: validateStep6,
+    7: validateStep7,
+    8: validateStep8
+  };
+
+  const validator = validators[stepNumber];
+  if (!validator) {
+    return { isValid: true, errors: {} };
+  }
+
+  return validator(formData);
+}
+
+/**
+ * Validate if all steps before current are completed
+ */
+function validatePreviousSteps(currentStep, formData) {
+  for (let step = 1; step < currentStep; step++) {
+    const validation = validateStep(step, formData);
+    if (!validation.isValid) {
+      return {
+        isValid: false,
+        firstIncompleteStep: step
+      };
+    }
+  }
+
+  return { isValid: true };
+}
+
+/**
+ * Helper Functions
+ */
+
+function isValidEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+function isValidPAN(pan) {
+  // PAN format: AAAAA0000A (5 letters, 4 digits, 1 letter)
+  const regex = /^[A-Z]{5}[0-9]{4}[A-Z]$/;
+  return regex.test(pan);
+}
+
+function calculateAge(dob) {
+  const today = new Date();
+  let age = today.getFullYear() - dob.getFullYear();
+  const monthDiff = today.getMonth() - dob.getMonth();
+  
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+    age--;
+  }
+  
+  return age;
+}
+
+/**
+ * File validation
+ */
+function validateFile(file) {
   const errors = [];
+  const maxSize = 2 * 1024 * 1024; // 2MB
+  const allowedFormats = ['image/jpeg', 'image/png'];
 
-  fields.forEach((field) => {
-    const message = validateField(field, formData);
-    if (message) errors.push({ field, message });
-  });
+  if (!file) {
+    errors.push('File is required');
+    return { isValid: false, errors };
+  }
 
-  return errors;
+  if (file.size > maxSize) {
+    errors.push(`File size must be less than 2MB (Current: ${(file.size / 1024 / 1024).toFixed(2)}MB)`);
+  }
+
+  if (!allowedFormats.includes(file.type)) {
+    errors.push('Only JPG and PNG files are allowed');
+  }
+
+  return {
+    isValid: errors.length === 0,
+    errors
+  };
 }
