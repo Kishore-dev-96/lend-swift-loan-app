@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="LendSwift - AI-Powered Loan Application Platform">
+  <title>LendSwift - Loan Application</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="loan-app.css">
+</head>
+<body>
+  <!-- Navigation Header -->
+  <header class="app-header">
+    <div class="header-container">
+      <a href="index.html" class="logo">
+        <span class="logo-icon">LS</span>
+        <span class="logo-text">LendSwift</span>
+      </a>
+      
+      <nav class="header-nav">
+        <a href="index.html">Home</a>
+        <a href="login.html">Login</a>
+      </nav>
+
+      <div class="header-actions">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle theme">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
+        <button class="clear-app-btn" id="clearAppBtn" aria-label="Clear application">Clear</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Application -->
+  <main class="app-main">
+    <!-- Success Screen (Hidden by default) -->
+    <section class="success-screen" id="successScreen" style="display: none;">
+      <div class="success-container">
+        <div class="success-icon">✓</div>
+        <h1>Application Submitted Successfully!</h1>
+        <p class="success-message">Your loan application has been received and is being processed.</p>
+        <div class="success-details">
+          <p><strong>Application ID:</strong> <span id="applicationId"></span></p>
+          <p><strong>Submitted:</strong> <span id="submittedTime"></span></p>
+        </div>
+        <p class="success-note">We'll send you updates via email and SMS. You can check your application status anytime by logging in to your account.</p>
+        <div class="success-actions">
+          <a href="index.html" class="btn btn-primary">Back to Home</a>
+          <a href="login.html" class="btn btn-secondary">Check Status</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Application Form Container -->
+    <div class="form-wrapper" id="formWrapper">
+      <!-- Progress Section -->
+      <section class="progress-section">
+        <div class="progress-header">
+          <div class="header-info">
+            <span class="step-counter">Step <span id="currentStepNum">1</span> of 8</span>
+            <h1 id="stepTitle" class="step-title">Loan Type Selection</h1>
+          </div>
+          <div class="progress-stats">
+            <span id="progressPercent" class="progress-percent">12%</span>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="progress-bar-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
+
+        <!-- Step Indicators -->
+        <div class="step-indicators">
+          <button class="step-indicator active" data-step="1" title="Step 1: Loan Type">1</button>
+          <button class="step-indicator" data-step="2" title="Step 2: Personal Info">2</button>
+          <button class="step-indicator" data-step="3" title="Step 3: KYC">3</button>
+          <button class="step-indicator" data-step="4" title="Step 4: Address">4</button>
+          <button class="step-indicator" data-step="5" title="Step 5: Employment">5</button>
+          <button class="step-indicator" data-step="6" title="Step 6: Co-Applicant">6</button>
+          <button class="step-indicator" data-step="7" title="Step 7: Documents">7</button>
+          <button class="step-indicator" data-step="8" title="Step 8: Review">8</button>
+        </div>
+      </section>
+
+      <!-- Form -->
+      <form id="loanForm" class="loan-form">
+        
+        <!-- STEP 1: LOAN TYPE SELECTION -->
+        <section class="form-step active" data-step="1">
+          <h2>Select Your Loan Type</h2>
+          <p class="step-description">Choose the type of loan that best fits your needs.</p>
+          
+          <div class="loan-type-grid">
+            <label class="loan-card">
+              <input type="radio" name="selectedLoanType" value="Personal" required>
+              <div class="card-content">
+                <h3>Personal Loan</h3>
+                <p>For personal expenses, education, or travel</p>
+                <ul class="card-features">
+                  <li>✓ Quick approval</li>
+                  <li>✓ Minimal documentation</li>
+                  <li>✓ Flexible tenure</li>
+                </ul>
+              </div>
+            </label>
+
+            <label class="loan-card">
+              <input type="radio" name="selectedLoanType" value="Home" required>
+              <div class="card-content">
+                <h3>Home Loan</h3>
+                <p>For purchasing or constructing a home</p>
+                <ul class="card-features">
+                  <li>✓ Long tenure</li>
+                  <li>✓ Lower interest</li>
+                  <li>✓ Tax benefits</li>
+                </ul>
+              </div>
+            </label>
+
+            <label class="loan-card">
+              <input type="radio" name="selectedLoanType" value="Business" required>
+              <div class="card-content">
+                <h3>Business Loan</h3>
+                <p>For starting or expanding your business</p>
+                <ul class="card-features">
+                  <li>✓ Higher amount</li>
+                  <li>✓ Flexible repayment</li>
+                  <li>✓ Business support</li>
+                </ul>
+              </div>
+            </label>
+          </div>
+          <span class="error-message" data-error="selectedLoanType"></span>
+        </section>
+
+        <!-- STEP 2: PERSONAL INFORMATION -->
+        <section class="form-step" data-step="2">
+          <h2>Personal Information</h2>
+          <p class="step-description">Please provide your basic details.</p>
+          
+          <div class="form-group">
+            <label for="fullName">Full Name *</label>
+            <input type="text" id="fullName" name="fullName" placeholder="Enter your full name" required>
+            <span class="error-message" data-error="fullName"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="dob">Date of Birth *</label>
+              <input type="date" id="dob" name="dob" required>
+              <span class="error-message" data-error="dob"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" placeholder="you@example.com" required>
+              <span class="error-message" data-error="email"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="mobile">Mobile Number *</label>
+            <input type="tel" id="mobile" name="mobile" placeholder="10-digit mobile number" maxlength="10" required>
+            <span class="error-message" data-error="mobile"></span>
+          </div>
+        </section>
+
+        <!-- STEP 3: KYC VERIFICATION -->
+        <section class="form-step" data-step="3">
+          <h2>KYC Verification</h2>
+          <p class="step-description">Provide your identity documents for verification.</p>
+          
+          <div class="form-group">
+            <label for="panNumber">PAN Number *</label>
+            <input type="text" id="panNumber" name="panNumber" placeholder="AAAAA0000A" maxlength="10" required>
+            <span class="error-message" data-error="panNumber"></span>
+            <button type="button" class="btn-verify" data-verify="pan">Verify PAN</button>
+            <div class="verify-status" id="panStatus"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="aadhaarNumber">Aadhaar Number *</label>
+            <input type="text" id="aadhaarNumber" name="aadhaarNumber" placeholder="12-digit Aadhaar" maxlength="12" required>
+            <span class="error-message" data-error="aadhaarNumber"></span>
+            <button type="button" class="btn-verify" data-verify="aadhaar">Verify Aadhaar</button>
+            <div class="verify-status" id="aadhaarStatus"></div>
+          </div>
+        </section>
+
+        <!-- STEP 4: ADDRESS DETAILS -->
+        <section class="form-step" data-step="4">
+          <h2>Address Details</h2>
+          <p class="step-description">Help us locate you with your address information.</p>
+          
+          <div class="form-group">
+            <label for="pincode">Postal Code (PIN) *</label>
+            <input type="text" id="pincode" name="pincode" placeholder="Enter 6-digit PIN" maxlength="6" required>
+            <span class="error-message" data-error="pincode"></span>
+            <span class="hint-message" id="pincodeHint"></span>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="city">City *</label>
+              <input type="text" id="city" name="city" placeholder="Your city" required>
+              <span class="error-message" data-error="city"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="state">State *</label>
+              <input type="text" id="state" name="state" placeholder="Your state" required>
+              <span class="error-message" data-error="state"></span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="address">Full Address *</label>
+            <textarea id="address" name="address" placeholder="Street address, building, house number" rows="3" required></textarea>
+            <span class="error-message" data-error="address"></span>
+          </div>
+        </section>
+
+        <!-- STEP 5: EMPLOYMENT & INCOME -->
+        <section class="form-step" data-step="5">
+          <h2>Employment & Income</h2>
+          <p class="step-description">Tell us about your employment status and income.</p>
+          
+          <div class="form-group">
+            <label for="employmentType">Employment Type *</label>
+            <select id="employmentType" name="employmentType" required>
+              <option value="">Select employment type</option>
+              <option value="Salaried">Salaried</option>
+              <option value="Self-Employed">Self-Employed</option>
+              <option value="Freelancer">Freelancer</option>
+            </select>
+            <span class="error-message" data-error="employmentType"></span>
+          </div>
+
+          <!-- Salaried Section -->
+          <div id="salariedSection" class="conditional-section" style="display: none;">
+            <div class="form-group">
+              <label for="companyName">Company Name *</label>
+              <input type="text" id="companyName" name="companyName" placeholder="Your company name">
+              <span class="error-message" data-error="companyName"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="monthlySalary">Monthly Salary *</label>
+              <input type="number" id="monthlySalary" name="monthlySalary" placeholder="Monthly salary in INR" min="0">
+              <span class="error-message" data-error="monthlySalary"></span>
+            </div>
+          </div>
+
+          <!-- Self-Employed Section -->
+          <div id="selfEmployedSection" class="conditional-section" style="display: none;">
+            <div class="form-group">
+              <label for="businessName">Business Name *</label>
+              <input type="text" id="businessName" name="businessName" placeholder="Your business name">
+              <span class="error-message" data-error="businessName"></span>
+            </div>
+
+            <div class="form-group">
+              <label for="annualIncome">Annual Income *</label>
+              <input type="number" id="annualIncome" name="annualIncome" placeholder="Annual income in INR" min="0">
+              <span class="error-message" data-error="annualIncome"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 6: CO-APPLICANT -->
+        <section class="form-step" data-step="6">
+          <h2>Co-Applicant</h2>
+          <p class="step-description">Do you want to add a co-applicant?</p>
+          
+          <div class="form-group checkbox-group">
+            <label class="checkbox-label">
+              <input type="checkbox" id="coApplicantEnabled" name="coApplicantEnabled">
+              <span>Add a co-applicant</span>
+            </label>
+          </div>
+
+          <!-- Co-Applicant Details -->
+          <div id="coApplicantFields" class="conditional-section" style="display: none;">
+            <div class="form-group">
+              <label for="coApplicantName">Co-Applicant Name *</label>
+              <input type="text" id="coApplicantName" name="coApplicantName" placeholder="Full name">
+              <span class="error-message" data-error="coApplicantName"></span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="coApplicantRelationship">Relationship *</label>
+                <select id="coApplicantRelationship" name="coApplicantRelationship">
+                  <option value="">Select relationship</option>
+                  <option value="Spouse">Spouse</option>
+                  <option value="Parent">Parent</option>
+                  <option value="Sibling">Sibling</option>
+                  <option value="Other">Other</option>
+                </select>
+                <span class="error-message" data-error="coApplicantRelationship"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="coApplicantIncome">Monthly Income *</label>
+                <input type="number" id="coApplicantIncome" name="coApplicantIncome" placeholder="Monthly income in INR" min="0">
+                <span class="error-message" data-error="coApplicantIncome"></span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- STEP 7: DOCUMENTS & SIGNATURE -->
+        <section class="form-step" data-step="7">
+          <h2>Documents & Signature</h2>
+          <p class="step-description">Upload required documents and provide your signature.</p>
+          
+          <div class="form-group">
+            <label for="panFile">PAN Document (.jpg, .png) - Max 2MB *</label>
+            <input type="file" id="panFile" name="panFile" accept=".jpg,.jpeg,.png" required>
+            <span class="error-message" data-error="panFile"></span>
+            <div id="panFilePreview" class="file-preview"></div>
+          </div>
+
+          <div class="form-group">
+            <label for="aadhaarFile">Aadhaar Document (.jpg, .png) - Max 2MB *</label>
+            <input type="file" id="aadhaarFile" name="aadhaarFile" accept=".jpg,.jpeg,.png" required>
+            <span class="error-message" data-error="aadhaarFile"></span>
+            <div id="aadhaarFilePreview" class="file-preview"></div>
+          </div>
+
+          <div class="form-group">
+            <label>Signature Canvas *</label>
+            <div class="signature-container">
+              <canvas id="signatureCanvas" width="400" height="150"></canvas>
+              <div class="signature-buttons">
+                <button type="button" id="clearSignature" class="btn btn-secondary">Clear</button>
+                <button type="button" id="saveSignature" class="btn btn-secondary">Save</button>
+              </div>
+            </div>
+            <span class="error-message" data-error="signature"></span>
+          </div>
+        </section>
+
+        <!-- STEP 8: REVIEW & SUBMIT -->
+        <section class="form-step" data-step="8">
+          <h2>Review Your Application</h2>
+          <p class="step-description">Please review all details before submitting.</p>
+          
+          <div class="review-section">
+            <div class="review-card">
+              <div class="review-card-header">
+                <h3>Loan Information</h3>
+                <button type="button" class="btn-edit" data-edit-step="1">Edit</button>
+              </div>
+              <div class="review-content" id="loanReview"></div>
+            </div>
+
+            <div class="review-card">
+              <div class="review-card-header">
+                <h3>Personal Information</h3>
+                <button type="button" class="btn-edit" data-edit-step="2">Edit</button>
+              </div>
+              <div class="review-content" id="personalReview"></div>
+            </div>
+
+            <div class="review-card">
+              <div class="review-card-header">
+                <h3>KYC Details</h3>
+                <button type="button" class="btn-edit" data-edit-step="3">Edit</button>
+              </div>
+              <div class="review-content" id="kycReview"></div>
+            </div>
+
+            <div class="review-card">
+              <div class="review-card-header">
+                <h3>Address</h3>
+                <button type="button" class="btn-edit" data-edit-step="4">Edit</button>
+              </div>
+              <div class="review-content" id="addressReview"></div>
+            </div>
+
+            <div class="review-card">
+              <div class="review-card-header">
+                <h3>Employment</h3>
+                <button type="button" class="btn-edit" data-edit-step="5">Edit</button>
+              </div>
+              <div class="review-content" id="employmentReview"></div>
+            </div>
+
+            <div id="coApplicantReview" class="review-card" style="display: none;">
+              <div class="review-card-header">
+                <h3>Co-Applicant</h3>
+                <button type="button" class="btn-edit" data-edit-step="6">Edit</button>
+              </div>
+              <div class="review-content" id="coApplicantContent"></div>
+            </div>
+          </div>
+
+          <div class="form-group checkbox-group" style="margin-top: 24px;">
+            <label class="checkbox-label">
+              <input type="checkbox" id="agreeTerms" name="agreeTerms" required>
+              <span>I agree to the terms and conditions</span>
+            </label>
+            <span class="error-message" data-error="agreeTerms"></span>
+          </div>
+        </section>
+      </form>
+
+      <!-- Navigation Buttons -->
+      <div class="form-actions">
+        <button type="button" id="prevBtn" class="btn btn-secondary" disabled>Previous</button>
+        <div class="center-actions">
+          <span class="autosave-status" id="autosaveStatus"></span>
+        </div>
+        <button type="button" id="nextBtn" class="btn btn-primary" disabled>Continue</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Loading Spinner -->
+  <div class="spinner-overlay" id="spinnerOverlay" style="display: none;">
+    <div class="spinner"></div>
+    <p id="spinnerText">Processing...</p>
+  </div>
+
+  <!-- Toast Notifications -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/storage.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/navigation.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
