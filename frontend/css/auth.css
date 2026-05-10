@@ -1,18 +1,14 @@
-/* Authentication Styles */
-:root {
-  --auth-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --auth-surface: rgba(255, 255, 255, 0.95);
-  --auth-glass: rgba(255, 255, 255, 0.1);
-  --auth-border: rgba(255, 255, 255, 0.2);
-  --auth-text: #1a202c;
-  --auth-text-muted: #718096;
-  --auth-primary: #4f46e5;
-  --auth-primary-hover: #4338ca;
-  --auth-success: #10b981;
-  --auth-error: #ef4444;
-  --auth-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --auth-shadow-hover: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-}
+/* ============================================
+   LENDSWIFT AI - AUTHENTICATION STYLES
+   OTP-based mobile authentication UI
+   ============================================ */
+
+/* Import global styles */
+@import url('./global.css');
+
+/* ============================================
+   AUTHENTICATION MAIN CONTAINER
+   ============================================ */
 
 /* Auth Main Container */
 .auth-main {

@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/navbar.css">
     <link rel="stylesheet" href="css/auth.css">
     <link rel="stylesheet" href="css/responsive.css">
 </head>
@@ -23,6 +25,7 @@
         <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu-toggle>
             <span></span>
             <span></span>
+            <span></span>
         </button>
 
         <nav class="nav-links" data-nav-links aria-label="Main navigation">
@@ -32,12 +35,17 @@
             <a href="login.html">Login</a>
             <a href="signup.html" class="active">Sign Up</a>
         </nav>
+
+        <div class="nav-cta">
+            <button class="btn btn-outline" id="login-btn">Login</button>
+            <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+        </div>
     </header>
 
     <!-- Main Content -->
     <main class="auth-main">
         <div class="auth-container">
-            <!-- Left Panel - Branding -->
+            <!-- Left Panel - Branding & Features -->
             <div class="auth-panel auth-panel-left">
                 <div class="auth-branding">
                     <div class="brand-logo">
@@ -56,17 +64,24 @@
                             </div>
                         </div>
                         <div class="feature-item">
-                            <div class="feature-icon">🔒</div>
+                            <div class="feature-icon">🔐</div>
                             <div class="feature-text">
                                 <strong>Bank-Grade Security</strong>
-                                <span>Your data is protected with enterprise security</span>
+                                <span>OTP-based secure verification</span>
                             </div>
                         </div>
                         <div class="feature-item">
                             <div class="feature-icon">⚡</div>
                             <div class="feature-text">
-                                <strong>Instant Insights</strong>
+                                <strong>Instant Approval</strong>
                                 <span>Know your eligibility in seconds</span>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">✓</div>
+                            <div class="feature-text">
+                                <strong>No Hidden Charges</strong>
+                                <span>Transparent pricing, no surprises</span>
                             </div>
                         </div>
                     </div>
@@ -81,23 +96,149 @@
                         <p>Join thousands of users getting smarter with their finances</p>
                     </div>
 
-                    <!-- Status Messages -->
-                    <div class="status-container">
-                        <div class="status-message status-success hidden" id="success-message">
-                            <div class="status-icon">✓</div>
-                            <div class="status-text">Account created successfully! Redirecting...</div>
+                    <!-- Progress Steps -->
+                    <div class="progress-steps">
+                        <div class="progress-step active" id="step-indicator-1">
+                            <div class="progress-number">1</div>
+                            <div class="progress-label">Details</div>
                         </div>
-                        <div class="status-message status-error hidden" id="error-message">
-                            <div class="status-icon">⚠</div>
-                            <div class="status-text" id="error-text"></div>
+                        <div class="progress-step" id="step-indicator-2">
+                            <div class="progress-number">2</div>
+                            <div class="progress-label">Verify</div>
+                        </div>
+                        <div class="progress-step" id="step-indicator-3">
+                            <div class="progress-number">3</div>
+                            <div class="progress-label">Complete</div>
                         </div>
                     </div>
 
+                    <!-- Status Messages -->
+                    <div class="status-container" id="status-container"></div>
+
                     <form class="auth-form" id="signup-form" novalidate>
-                        <!-- Full Name -->
-                        <div class="form-group">
-                            <label for="fullName" class="form-label">Full Name *</label>
-                            <div class="input-container">
+                        <!-- Step 1: User Details -->
+                        <div id="step-details">
+                            <!-- Full Name -->
+                            <div class="form-group">
+                                <label for="fullName" class="form-label">Full Name <span style="color: var(--error);">*</span></label>
+                                <div class="input-container">
+                                    <input
+                                        type="text"
+                                        id="fullName"
+                                        name="fullName"
+                                        class="form-input"
+                                        placeholder="John Doe"
+                                        required
+                                        autocomplete="name"
+                                    >
+                                    <div class="input-icon">👤</div>
+                                </div>
+                                <div class="error-message" id="fullName-error"></div>
+                            </div>
+
+                            <!-- Mobile Number -->
+                            <div class="form-group">
+                                <label for="mobile" class="form-label">Mobile Number <span style="color: var(--error);">*</span></label>
+                                <div class="input-container">
+                                    <input
+                                        type="tel"
+                                        id="mobile"
+                                        name="mobile"
+                                        class="form-input"
+                                        placeholder="+91 98765 43210"
+                                        required
+                                        autocomplete="tel"
+                                        pattern="[0-9]{10}"
+                                        maxlength="10"
+                                    >
+                                    <div class="input-icon">📱</div>
+                                </div>
+                                <div class="error-message" id="mobile-error"></div>
+                            </div>
+
+                            <!-- Email -->
+                            <div class="form-group">
+                                <label for="email" class="form-label">Email Address <span style="color: var(--error);">*</span></label>
+                                <div class="input-container">
+                                    <input
+                                        type="email"
+                                        id="email"
+                                        name="email"
+                                        class="form-input"
+                                        placeholder="your@email.com"
+                                        required
+                                        autocomplete="email"
+                                    >
+                                    <div class="input-icon">✉</div>
+                                </div>
+                                <div class="error-message" id="email-error"></div>
+                            </div>
+
+                            <button type="button" class="auth-button" id="send-otp-signup-btn">
+                                <span class="button-text">Send OTP</span>
+                                <div class="button-loader hidden">
+                                    <div class="spinner"></div>
+                                </div>
+                            </button>
+                        </div>
+
+                        <!-- Step 2: OTP Verification -->
+                        <div id="step-otp-signup" style="display: none;">
+                            <div class="form-group">
+                                <label for="otp-1" class="form-label">Enter 6-Digit OTP <span style="color: var(--error);">*</span></label>
+                                <div class="otp-inputs-container">
+                                    <input type="text" id="otp-1" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                                    <input type="text" id="otp-2" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                                    <input type="text" id="otp-3" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                                    <input type="text" id="otp-4" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                                    <input type="text" id="otp-5" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                                    <input type="text" id="otp-6" class="otp-input" maxlength="1" pattern="[0-9]" required>
+                                </div>
+                                <div class="error-message" id="otp-error"></div>
+                            </div>
+
+                            <div class="otp-timer-container">
+                                <span class="otp-timer">OTP expires in <span id="otp-countdown-signup">60</span>s</span>
+                            </div>
+
+                            <button type="button" class="auth-button" id="verify-otp-signup-btn">
+                                <span class="button-text">Verify & Create Account</span>
+                                <div class="button-loader hidden">
+                                    <div class="spinner"></div>
+                                </div>
+                            </button>
+
+                            <div class="resend-link">
+                                Didn't receive OTP? 
+                                <a href="#" id="resend-otp-signup-link" class="disabled">Resend in <span id="resend-countdown-signup">30</span>s</a>
+                            </div>
+
+                            <button type="button" class="btn btn-outline" id="back-to-details-btn" style="width: 100%; margin-top: var(--spacing-lg);">
+                                Edit Details
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Alternative Login -->
+                    <div class="auth-alternative">
+                        <p>Already have an account? <a href="login.html">Sign in</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="toast-notification hidden" role="status" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="js/navbar.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/auth-storage.js"></script>
+    <script src="js/otp.js"></script>
+    <script src="js/signup-otp.js"></script>
+</body>
+</html>
                                 <input
                                     type="text"
                                     id="fullName"
