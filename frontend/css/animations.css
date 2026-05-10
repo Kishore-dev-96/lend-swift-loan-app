@@ -1,3 +1,8 @@
+/* ============================================
+   LENDSWIFT AI - ANIMATIONS & EFFECTS
+   Comprehensive motion design system
+   ============================================ */
+
 @media (prefers-reduced-motion: no-preference) {
   .form-step.active {
     animation: step-in 220ms ease-out;
@@ -28,5 +33,403 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   Floating notification system
+   ============================================ */
+
+.toast-container {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  z-index: 9999;
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.toast-notification {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background-color: #ffffff;
+  border-left: 4px solid #3b82f6;
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+  margin-bottom: 0.75rem;
+  animation: slideInRight 0.3s ease-out;
+  pointer-events: auto;
+  min-width: 280px;
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutRight {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+}
+
+.toast-notification.removing {
+  animation: slideOutRight 0.3s ease-out;
+}
+
+.toast-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  min-width: 24px;
+  text-align: center;
+}
+
+.toast-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.toast-title {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+.toast-message {
+  color: #6b7280;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.toast-close {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  color: #9ca3af;
+  font-size: 1.2rem;
+  transition: color 150ms ease;
+  flex-shrink: 0;
+}
+
+.toast-close:hover {
+  color: #6b7280;
+}
+
+.toast-success {
+  border-left-color: #10b981;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.05) 0%, transparent 100%);
+}
+
+.toast-success .toast-icon {
+  color: #10b981;
+}
+
+.toast-error {
+  border-left-color: #ef4444;
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.05) 0%, transparent 100%);
+}
+
+.toast-error .toast-icon {
+  color: #ef4444;
+}
+
+.toast-warning {
+  border-left-color: #f59e0b;
+  background: linear-gradient(90deg, rgba(245, 158, 11, 0.05) 0%, transparent 100%);
+}
+
+.toast-warning .toast-icon {
+  color: #f59e0b;
+}
+
+.toast-info {
+  border-left-color: #3b82f6;
+  background: linear-gradient(90deg, rgba(59, 130, 246, 0.05) 0%, transparent 100%);
+}
+
+.toast-info .toast-icon {
+  color: #3b82f6;
+}
+
+/* ============================================
+   SKELETON LOADERS
+   Shimmer effect for loading states
+   ============================================ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f3f4f6 0%,
+    #e5e7eb 50%,
+    #f3f4f6 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-text {
+  height: 1rem;
+  border-radius: 0.375rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton-text.short {
+  width: 60%;
+}
+
+.skeleton-input {
+  height: 44px;
+  border-radius: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.skeleton-button {
+  height: 44px;
+  border-radius: 0.5rem;
+  width: 100%;
+}
+
+/* ============================================
+   LOADING STATES
+   Spinner and loading indicators
+   ============================================ */
+
+.loading-spinner {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+}
+
+.loading-spinner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================================
+   PAGE TRANSITIONS
+   Fade and slide effects
+   ============================================ */
+
+.fade-in {
+  animation: fadeIn 0.4s ease-out;
+}
+
+.fade-out {
+  animation: fadeOut 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   BUTTON RIPPLE EFFECT
+   Click feedback animation
+   ============================================ */
+
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.btn-ripple:active::after {
+  animation: ripple 0.6s ease-out;
+}
+
+@keyframes ripple {
+  to {
+    width: 300px;
+    height: 300px;
+    opacity: 0;
+  }
+}
+
+/* ============================================
+   FORM VALIDATION STATES
+   Input focus and validation animations
+   ============================================ */
+
+.form-input.success {
+  border-color: #10b981;
+  background: linear-gradient(90deg, rgba(16, 185, 129, 0.02) 0%, transparent 100%);
+}
+
+.form-input.error {
+  border-color: #ef4444;
+  background: linear-gradient(90deg, rgba(239, 68, 68, 0.02) 0%, transparent 100%);
+}
+
+.error-shake {
+  animation: shake 0.3s ease-in-out;
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+/* ============================================
+   SUCCESS ANIMATIONS
+   Success state feedback
+   ============================================ */
+
+.success-checkmark {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #10b981;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1rem auto;
+  animation: scaleIn 0.4s ease-out;
+}
+
+.success-checkmark::after {
+  content: '✓';
+  color: white;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+@keyframes scaleIn {
+  0% {
+    transform: scale(0) rotate(-180deg);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+/* ============================================
+   MICRO INTERACTIONS
+   Subtle animations for UI elements
+   ============================================ */
+
+.pulse {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+.bounce {
+  animation: bounce 0.6s ease-in-out;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+/* ============================================
+   RESPONSIVE ANIMATIONS
+   Mobile-friendly motion
+   ============================================ */
+
+@media (max-width: 640px) {
+  .toast-container {
+    top: 0.75rem;
+    right: 0.75rem;
+    left: 0.75rem;
+    max-width: 100%;
+  }
+
+  .toast-notification {
+    min-width: auto;
+  }
+
+  /* Reduce motion on mobile */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 }

@@ -17,28 +17,30 @@
 <body data-page="signup">
     <!-- Navbar -->
     <header class="navbar" data-navbar>
-        <a class="brand" href="index.html" aria-label="LendSwift home">
-            <span class="brand-mark">LS</span>
-            <span>LendSwift AI</span>
+        <a class="brand" href="index.html" aria-label="LendSwift AI home">
+            <div class="brand-mark">
+                <span class="logo-icon">💰</span>
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">Lend Swift AI</span>
+                <span class="brand-tagline">Smart Lending</span>
+            </div>
         </a>
 
-        <button class="menu-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" data-menu-toggle>
-            <span></span>
-            <span></span>
-            <span></span>
+        <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-menu-toggle>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
         </button>
 
         <nav class="nav-links" data-nav-links aria-label="Main navigation">
-            <a href="index.html">Home</a>
-            <a href="index.html#features">Features</a>
-            <a href="index.html#about">About</a>
-            <a href="login.html">Login</a>
-            <a href="signup.html" class="active">Sign Up</a>
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="index.html#features" class="nav-link">Features</a>
+            <a href="login.html" class="nav-link">Login</a>
         </nav>
 
         <div class="nav-cta">
-            <button class="btn btn-outline" id="login-btn">Login</button>
-            <button class="btn btn-primary" id="signup-btn">Sign Up</button>
+            <a href="login.html" class="btn btn-outline btn-login">Login</a>
         </div>
     </header>
 

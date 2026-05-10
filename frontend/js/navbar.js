@@ -1,6 +1,7 @@
 /**
  * LendSwift AI - Responsive Navbar Module
  * Handles mobile menu, sticky behavior, and navigation
+ * Production-grade fintech navigation
  */
 
 class Navbar {
@@ -18,18 +19,28 @@ class Navbar {
     this.setupEventListeners();
     this.setupScrollBehavior();
     this.setupKeyboardNavigation();
+    this.handleNavigation();
   }
 
   setupEventListeners() {
     // Mobile menu toggle
     if (this.menuToggle && this.navLinks) {
-      this.menuToggle.addEventListener('click', () => this.toggleMenu());
+      this.menuToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        this.toggleMenu();
+      });
     }
 
     // Close menu when clicking links
     const links = this.navLinks?.querySelectorAll('a');
     links?.forEach(link => {
-      link.addEventListener('click', () => this.closeMenu());
+      link.addEventListener('click', (e) => {
+        // Only close for anchor links, not external navigations
+        if (link.getAttribute('href').startsWith('#')) {
+          this.closeMenu();
+          this.setActiveLink(link);
+        }
+      });
     });
 
     // Close menu when clicking outside
@@ -41,7 +52,7 @@ class Navbar {
 
     // Close menu on escape key
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' && this.isMenuOpen) {
         this.closeMenu();
       }
     });
@@ -55,6 +66,9 @@ class Navbar {
       if (this.navbar) {
         this.navbar.classList.toggle('scrolled', currentScrollY > 20);
       }
+
+      // Update active link based on scroll position
+      this.updateActiveLink();
 
       this.lastScrollY = currentScrollY;
     });
@@ -78,9 +92,30 @@ class Navbar {
             if (document.activeElement === lastElement) {
               e.preventDefault();
               this.closeMenu();
+              this.menuToggle?.focus();
             }
           }
         }
+      });
+    }
+  }
+
+  handleNavigation() {
+    // Handle login button
+    const loginBtn = document.getElementById('home-login-btn');
+    if (loginBtn) {
+      loginBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'login.html';
+      });
+    }
+
+    // Handle signup button
+    const signupBtn = document.getElementById('home-signup-btn');
+    if (signupBtn) {
+      signupBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        window.location.href = 'signup.html';
       });
     }
   }
@@ -92,6 +127,7 @@ class Navbar {
 
     // Toggle menu visibility
     this.navLinks.classList.toggle('open', this.isMenuOpen);
+    this.navLinks.classList.toggle('active', this.isMenuOpen);
     document.body.classList.toggle('menu-open', this.isMenuOpen);
 
     // Update aria attributes
@@ -109,22 +145,18 @@ class Navbar {
 
     this.isMenuOpen = false;
     this.navLinks.classList.remove('open');
+    this.navLinks.classList.remove('active');
     document.body.classList.remove('menu-open');
     this.menuToggle.setAttribute('aria-expanded', 'false');
   }
 
-  // Smooth scroll to section
-  scrollToSection(sectionId) {
-    const section = document.getElementById(sectionId);
-    if (section) {
-      const offset = this.navbar ? this.navbar.offsetHeight : 0;
-      const targetPosition = section.offsetTop - offset;
-
-      window.scrollTo({
-        top: targetPosition,
-        behavior: 'smooth'
-      });
-    }
+  setActiveLink(element) {
+    // Remove active class from all links
+    this.navLinks?.querySelectorAll('a').forEach(link => {
+      link.classList.remove('active');
+    });
+    // Add active class to clicked link
+    element.classList.add('active');
   }
 
   // Update active navigation link based on scroll position
@@ -141,16 +173,35 @@ class Navbar {
         const activeLink = this.navLinks?.querySelector(`a[href="#${sectionId}"]`);
         if (activeLink) {
           // Remove active class from all links
-          this.navLinks.querySelectorAll('a').forEach(link => link.classList.remove('active'));
+          this.navLinks?.querySelectorAll('a').forEach(link => link.classList.remove('active'));
           // Add active class to current link
           activeLink.classList.add('active');
         }
       }
     });
   }
+
+  // Smooth scroll to section
+  scrollToSection(sectionId) {
+    const section = document.getElementById(sectionId);
+    if (section) {
+      const offset = this.navbar ? this.navbar.offsetHeight : 0;
+      const targetPosition = section.offsetTop - offset;
+
+      window.scrollTo({
+        top: targetPosition,
+        behavior: 'smooth'
+      });
+
+      // Close menu after scrolling
+      this.closeMenu();
+    }
+  }
 }
 
-// Theme Toggle Functionality
+/**
+ * Theme Manager - Light/Dark Mode Support
+ */
 class ThemeManager {
   constructor() {
     this.theme = localStorage.getItem('lendswift_theme') || 'light';
@@ -165,7 +216,10 @@ class ThemeManager {
   setupThemeToggle() {
     const themeToggle = document.querySelector('[data-theme-toggle]');
     if (themeToggle) {
-      themeToggle.addEventListener('click', () => this.toggleTheme());
+      themeToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.toggleTheme();
+      });
     }
   }
 
