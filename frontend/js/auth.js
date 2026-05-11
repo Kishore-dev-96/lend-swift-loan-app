@@ -1,10 +1,343 @@
 /**
- * AUTHENTICATION MODULE
- * LendSwift AI - Complete Authentication System
- * Handles: Login, Signup, OTP, Session Management
+ * LendSwift AI - Core Authentication Module
+ * Handles signup, login, OTP verification, and session management
  */
 
-const AuthSystem = {
+const AuthSystem = (() => {
+  // Constants
+  const STORAGE_PREFIX = 'lendswift_';
+  const USERS_KEY = `${STORAGE_PREFIX}users`;
+  const SESSION_KEY = `${STORAGE_PREFIX}session`;
+  const OTP_KEY = `${STORAGE_PREFIX}otp`;
+  const OTP_EXPIRY = 5 * 60 * 1000; // 5 minutes
+  const PROTECTED_PAGES = ['dashboard.html', 'loan-application.html', 'kyc-upload.html', 'profile.html'];
+
+  // Initialize storage
+  const initStorage = () => {
+    if (!localStorage.getItem(USERS_KEY)) {
+      localStorage.setItem(USERS_KEY, JSON.stringify([]));
+    }
+  };
+
+  // Generate OTP
+  const generateOTP = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  // Hash password (simulation - NOT for production)
+  const hashPassword = (password) => {
+    let hash = 0;
+    for (let i = 0; i < password.length; i++) {
+      const char = password.charCodeAt(i);
+      hash = ((hash << 5) - hash) + char;
+      hash = hash & hash;
+    }
+    return btoa(Math.abs(hash).toString()); // Base64 encode
+  };
+
+  // Verify password
+  const verifyPassword = (plainPassword, hashedPassword) => {
+    return hashPassword(plainPassword) === hashedPassword;
+  };
+
+  // Get all users
+  const getAllUsers = () => {
+    try {
+      const users = localStorage.getItem(USERS_KEY);
+      return users ? JSON.parse(users) : [];
+    } catch (error) {
+      console.error('Error retrieving users:', error);
+      return [];
+    }
+  };
+
+  // Save user
+  const saveUser = (userData) => {
+    try {
+      const users = getAllUsers();
+      const userExists = users.some(u => u.email === userData.email || u.mobile === userData.mobile);
+      
+      if (userExists) {
+        return { success: false, message: 'User already exists' };
+      }
+
+      const newUser = {
+        id: Date.now().toString(),
+        ...userData,
+        password: hashPassword(userData.password),
+        createdAt: new Date().toISOString(),
+        verified: false,
+        lastLogin: null
+      };
+
+      users.push(newUser);
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      return { success: true, message: 'User registered successfully', userId: newUser.id };
+    } catch (error) {
+      console.error('Error saving user:', error);
+      return { success: false, message: 'Error saving user data' };
+    }
+  };
+
+  // Find user by email or mobile
+  const findUser = (identifier) => {
+    const users = getAllUsers();
+    return users.find(u => u.email === identifier || u.mobile === identifier);
+  };
+
+  // Signup
+  const signup = (fullName, email, mobile, password) => {
+    if (!fullName || !email || !mobile || !password) {
+      return { success: false, message: 'All fields are required' };
+    }
+
+    // Validation
+    if (!isValidEmail(email)) {
+      return { success: false, message: 'Invalid email format' };
+    }
+
+    if (!isValidMobile(mobile)) {
+      return { success: false, message: 'Mobile number must be 10 digits' };
+    }
+
+    if (password.length < 8) {
+      return { success: false, message: 'Password must be at least 8 characters' };
+    }
+
+    // Check if user exists
+    const existingUser = findUser(email) || findUser(mobile);
+    if (existingUser) {
+      return { success: false, message: 'Email or mobile already registered' };
+    }
+
+    // Save user
+    return saveUser({ fullName, email, mobile, password });
+  };
+
+  // Login
+  const login = (identifier, password) => {
+    if (!identifier || !password) {
+      return { success: false, message: 'Email/Mobile and password are required' };
+    }
+
+    const user = findUser(identifier);
+    if (!user) {
+      return { success: false, message: 'User not found' };
+    }
+
+    if (!verifyPassword(password, user.password)) {
+      return { success: false, message: 'Incorrect password' };
+    }
+
+    if (!user.verified) {
+      return { success: false, message: 'Please verify your account first' };
+    }
+
+    return { success: true, message: 'Login successful', userId: user.id };
+  };
+
+  // Create OTP
+  const createOTP = (mobile) => {
+    const otp = generateOTP();
+    const otpData = {
+      otp,
+      mobile,
+      createdAt: Date.now(),
+      expiresAt: Date.now() + OTP_EXPIRY,
+      attempts: 0,
+      verified: false
+    };
+
+    sessionStorage.setItem(OTP_KEY, JSON.stringify(otpData));
+    return otp;
+  };
+
+  // Verify OTP
+  const verifyOTP = (inputOTP) => {
+    try {
+      const otpData = JSON.parse(sessionStorage.getItem(OTP_KEY));
+
+      if (!otpData) {
+        return { success: false, message: 'OTP expired or not found' };
+      }
+
+      if (Date.now() > otpData.expiresAt) {
+        sessionStorage.removeItem(OTP_KEY);
+        return { success: false, message: 'OTP has expired' };
+      }
+
+      if (otpData.attempts >= 3) {
+        sessionStorage.removeItem(OTP_KEY);
+        return { success: false, message: 'Too many attempts. Request a new OTP' };
+      }
+
+      if (inputOTP !== otpData.otp) {
+        otpData.attempts += 1;
+        sessionStorage.setItem(OTP_KEY, JSON.stringify(otpData));
+        return { success: false, message: 'Incorrect OTP' };
+      }
+
+      return { success: true, message: 'OTP verified successfully', mobile: otpData.mobile };
+    } catch (error) {
+      console.error('Error verifying OTP:', error);
+      return { success: false, message: 'Error verifying OTP' };
+    }
+  };
+
+  // Get remaining OTP time
+  const getOTPTimeRemaining = () => {
+    try {
+      const otpData = JSON.parse(sessionStorage.getItem(OTP_KEY));
+      if (!otpData) return 0;
+
+      const remaining = Math.max(0, Math.ceil((otpData.expiresAt - Date.now()) / 1000));
+      return remaining;
+    } catch {
+      return 0;
+    }
+  };
+
+  // Verify user email and set verified
+  const verifyUserEmail = (userId) => {
+    try {
+      const users = getAllUsers();
+      const userIndex = users.findIndex(u => u.id === userId);
+
+      if (userIndex === -1) {
+        return { success: false, message: 'User not found' };
+      }
+
+      users[userIndex].verified = true;
+      users[userIndex].verifiedAt = new Date().toISOString();
+      localStorage.setItem(USERS_KEY, JSON.stringify(users));
+
+      return { success: true, message: 'Email verified successfully' };
+    } catch (error) {
+      console.error('Error verifying user:', error);
+      return { success: false, message: 'Error verifying user' };
+    }
+  };
+
+  // Create session
+  const createSession = (userId) => {
+    try {
+      const user = getAllUsers().find(u => u.id === userId);
+      if (!user) {
+        return { success: false, message: 'User not found' };
+      }
+
+      const session = {
+        userId,
+        loggedIn: true,
+        loginTime: new Date().toISOString(),
+        userEmail: user.email,
+        userName: user.fullName,
+        userMobile: user.mobile,
+        sessionToken: btoa(`${userId}:${Date.now()}`)
+      };
+
+      localStorage.setItem(SESSION_KEY, JSON.stringify(session));
+
+      // Update last login
+      user.lastLogin = new Date().toISOString();
+      const users = getAllUsers();
+      const userIndex = users.findIndex(u => u.id === userId);
+      if (userIndex !== -1) {
+        users[userIndex] = user;
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
+      }
+
+      return { success: true, message: 'Session created', session };
+    } catch (error) {
+      console.error('Error creating session:', error);
+      return { success: false, message: 'Error creating session' };
+    }
+  };
+
+  // Get current session
+  const getSession = () => {
+    try {
+      const session = localStorage.getItem(SESSION_KEY);
+      return session ? JSON.parse(session) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  // Check if logged in
+  const isLoggedIn = () => {
+    const session = getSession();
+    return session && session.loggedIn === true;
+  };
+
+  // Logout
+  const logout = () => {
+    localStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(OTP_KEY);
+    return { success: true, message: 'Logged out successfully' };
+  };
+
+  // Protect route
+  const protectRoute = () => {
+    const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+    
+    if (PROTECTED_PAGES.includes(currentPage)) {
+      if (!isLoggedIn()) {
+        window.location.href = 'login.html';
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // Validation helpers
+  const isValidEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const isValidMobile = (mobile) => {
+    return /^[0-9]{10}$/.test(mobile);
+  };
+
+  const isValidPassword = (password) => {
+    return password && password.length >= 8;
+  };
+
+  const passwordsMatch = (password, confirmPassword) => {
+    return password === confirmPassword;
+  };
+
+  return {
+    initStorage,
+    signup,
+    login,
+    logout,
+    createOTP,
+    verifyOTP,
+    getOTPTimeRemaining,
+    verifyUserEmail,
+    createSession,
+    getSession,
+    isLoggedIn,
+    protectRoute,
+    findUser,
+    getAllUsers,
+    isValidEmail,
+    isValidMobile,
+    isValidPassword,
+    passwordsMatch
+  };
+})();
+
+// Initialize storage on load
+document.addEventListener('DOMContentLoaded', () => {
+  AuthSystem.initStorage();
+  AuthSystem.protectRoute();
+});
+
+// OLD INTERFACE BELOW - KEEPING FOR REFERENCE
+const LegacyAuthSystem = {
   // State Management
   state: {
     currentUser: null,

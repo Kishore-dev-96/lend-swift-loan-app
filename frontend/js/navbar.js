@@ -128,10 +128,11 @@ class Navbar {
     // Toggle menu visibility
     this.navLinks.classList.toggle('open', this.isMenuOpen);
     this.navLinks.classList.toggle('active', this.isMenuOpen);
+    this.menuToggle.classList.toggle('active', this.isMenuOpen);
     document.body.classList.toggle('menu-open', this.isMenuOpen);
 
     // Update aria attributes
-    this.menuToggle.setAttribute('aria-expanded', this.isMenuOpen);
+    this.menuToggle.setAttribute('aria-expanded', String(this.isMenuOpen));
 
     // Focus management
     if (this.isMenuOpen) {
@@ -146,6 +147,7 @@ class Navbar {
     this.isMenuOpen = false;
     this.navLinks.classList.remove('open');
     this.navLinks.classList.remove('active');
+    this.menuToggle.classList.remove('active');
     document.body.classList.remove('menu-open');
     this.menuToggle.setAttribute('aria-expanded', 'false');
   }

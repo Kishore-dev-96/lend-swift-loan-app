@@ -25,21 +25,34 @@ const OTPManager = {
   /**
    * Initialize OTP timer
    */
+  getCountdownElement() {
+    return document.getElementById('otp-countdown') || document.getElementById('otp-countdown-signup');
+  },
+
+  getResendElements() {
+    return {
+      resendLink: document.getElementById('resend-otp-link') || document.getElementById('resend-otp-signup-link'),
+      resendCountdown: document.getElementById('resend-countdown') || document.getElementById('resend-countdown-signup')
+    };
+  },
+
+  getVerifyButton() {
+    return document.getElementById('verify-otp-btn') || document.getElementById('verify-otp-signup-btn');
+  },
+
   startOTPTimer() {
     const expiryTime = new Date().getTime() + this.CONFIG.OTP_EXPIRY;
     this.state.otpExpiredTime = expiryTime;
 
-    const countdownElement = document.getElementById('otp-countdown');
+    const countdownElement = this.getCountdownElement();
     if (!countdownElement) return;
 
-    // Clear any existing interval
     if (this.state.countdownInterval) {
       clearInterval(this.state.countdownInterval);
     }
 
     this.state.countdownInterval = setInterval(() => {
       const remaining = Math.max(0, Math.floor((expiryTime - new Date().getTime()) / 1000));
-
       countdownElement.textContent = remaining;
 
       if (remaining === 0) {
@@ -47,9 +60,8 @@ const OTPManager = {
         this.handleOTPExpiry();
       }
 
-      // Show warning when less than 30 seconds
       if (remaining < 30 && remaining > 0) {
-        countdownElement.parentElement.classList.add('otp-expired');
+        countdownElement.parentElement?.classList.add('otp-expired');
       }
     }, 1000);
 
@@ -63,23 +75,18 @@ const OTPManager = {
     const resendAllowedTime = new Date().getTime() + this.CONFIG.RESEND_DELAY;
     this.state.resendAllowedTime = resendAllowedTime;
 
-    const resendLink = document.getElementById('resend-otp-link');
-    const resendCountdown = document.getElementById('resend-countdown');
-
+    const { resendLink, resendCountdown } = this.getResendElements();
     if (!resendLink || !resendCountdown) return;
 
-    // Disable resend link initially
     resendLink.classList.add('disabled');
     resendLink.style.pointerEvents = 'none';
 
-    // Clear any existing interval
     if (this.state.resendCountdownInterval) {
       clearInterval(this.state.resendCountdownInterval);
     }
 
     this.state.resendCountdownInterval = setInterval(() => {
       const remaining = Math.max(0, Math.floor((resendAllowedTime - new Date().getTime()) / 1000));
-
       resendCountdown.textContent = remaining;
 
       if (remaining === 0) {
@@ -97,9 +104,9 @@ const OTPManager = {
   handleOTPExpiry() {
     console.log('⏱️ OTP has expired');
 
-    const countdownElement = document.getElementById('otp-countdown');
+    const countdownElement = this.getCountdownElement();
     if (countdownElement) {
-      countdownElement.parentElement.classList.add('otp-expired');
+      countdownElement.parentElement?.classList.add('otp-expired');
       countdownElement.textContent = '0';
     }
 
@@ -109,7 +116,7 @@ const OTPManager = {
       input.classList.add('error');
     });
 
-    const verifyBtn = document.getElementById('verify-otp-btn');
+    const verifyBtn = this.getVerifyButton();
     if (verifyBtn) {
       verifyBtn.disabled = true;
       verifyBtn.textContent = 'OTP Expired';
@@ -124,7 +131,7 @@ const OTPManager = {
   enableResendOTP() {
     console.log('✅ Resend OTP is now enabled');
 
-    const resendLink = document.getElementById('resend-otp-link');
+    const { resendLink } = this.getResendElements();
     if (resendLink) {
       resendLink.classList.remove('disabled');
       resendLink.style.pointerEvents = 'auto';

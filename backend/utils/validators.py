@@ -1,6 +1,6 @@
 import re
 
-from .config import PASSWORD_MIN_LENGTH
+from ..config import PASSWORD_MIN_LENGTH
 
 
 def validate_email(value: str) -> bool:

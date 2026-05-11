@@ -9,6 +9,7 @@ from ..services.otp_service import send_login_otp, verify_login_otp
 from ..services.user_service import (
     build_user_response,
     create_user,
+    create_user_mobile,
     get_user_by_email,
     get_user_by_mobile,
     increment_failed_login,
@@ -29,10 +30,21 @@ auth_bp = Blueprint("auth", __name__, url_prefix="/api/auth")
 
 
 def _get_user_token_response(user):
-    token = generate_jwt({"sub": user["id"], "email": user["email"]})
+    token_payload = {
+        "sub": user["id"],
+        "email": user["email"],
+        "name": user["name"],
+        "mobile": user["mobile"],
+    }
+    token = generate_jwt(token_payload)
     csrf_token = generate_csrf_token()
     response = make_response(
-        jsonify({"message": "Authenticated", "user": build_user_response(user)})
+        jsonify({
+            "success": True,
+            "message": "Authenticated",
+            "user": build_user_response(user),
+            "token": token,
+        })
     )
     response.set_cookie(
         JWT_COOKIE_NAME,
@@ -153,19 +165,65 @@ def send_otp():
         return jsonify({"error": "Missing or invalid CSRF token."}), 403
     payload = request.get_json(silent=True) or {}
     mobile = (payload.get("mobile") or "").strip()
+    request_type = (payload.get("type") or "login").strip().lower()
+
     if not validate_mobile(mobile):
         return jsonify({"error": "Invalid mobile number."}), 400
 
     user = get_user_by_mobile(mobile)
-    if not user:
-        return jsonify({"error": "No account found for this mobile."}), 404
+    if request_type == "signup":
+        if user:
+            return jsonify({"error": "Mobile number is already registered."}), 409
+    else:
+        if not user:
+            return jsonify({"error": "No account found for this mobile."}), 404
 
     try:
         result = send_login_otp(mobile, request.remote_addr)
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 429
 
-    return jsonify({"message": "OTP sent.", **result}), 200
+    return jsonify({"success": True, "message": "OTP sent.", **result}), 200
+
+
+@auth_bp.route("/verify-otp", methods=["POST"])
+def verify_otp():
+    return mobile_login()
+
+
+@auth_bp.route("/signup-verify-otp", methods=["POST"])
+def signup_verify_otp():
+    if not require_csrf(request):
+        return jsonify({"error": "Missing or invalid CSRF token."}), 403
+    payload = request.get_json(silent=True) or {}
+    name = (payload.get("fullName") or "").strip()
+    email = (payload.get("email") or "").strip()
+    mobile = (payload.get("mobile") or "").strip()
+    otp = (payload.get("otp") or "").strip()
+
+    if not name or len(name) < 2:
+        return jsonify({"error": "Please enter a valid full name."}), 400
+    if not validate_email(email):
+        return jsonify({"error": "Invalid email address."}), 400
+    if not validate_mobile(mobile):
+        return jsonify({"error": "Invalid mobile number."}), 400
+    if not otp:
+        return jsonify({"error": "OTP is required."}), 400
+
+    if get_user_by_email(email):
+        return jsonify({"error": "Email already registered."}), 409
+    if get_user_by_mobile(mobile):
+        return jsonify({"error": "Mobile number is already registered."}), 409
+
+    try:
+        verify_login_otp(mobile, otp, request.remote_addr)
+    except ValueError as exc:
+        return jsonify({"error": str(exc)}), 400
+
+    user_id = create_user_mobile(name, email, mobile)
+    user = get_user_by_mobile(mobile)
+    record_activity(user_id, "signup_mobile", request.remote_addr)
+    return _get_user_token_response(user)
 
 
 @auth_bp.route("/mobile-login", methods=["POST"])

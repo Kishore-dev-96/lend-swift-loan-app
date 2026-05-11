@@ -135,7 +135,7 @@ const LoginOTP = {
 
         // Store mobile temporarily
         this.state.mobileNumber = validation.mobile;
-        AuthStorage.setItem('temp_mobile', validation.mobile);
+        window.authStorage.setItem('temp_mobile', validation.mobile);
 
         // Show OTP input step
         this.showOTPStep();
@@ -190,22 +190,10 @@ const LoginOTP = {
    */
   async sendOTPToBackend(mobile) {
     try {
-      const response = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          mobile: mobile,
-          countryCode: '+91'
-        })
+      const data = await AuthAPI.post('/api/auth/send-otp', {
+        mobile: mobile,
+        type: 'login'
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
       return data;
     } catch (error) {
       console.error('❌ Error sending OTP to backend:', error);
@@ -262,17 +250,14 @@ const LoginOTP = {
       if (response.success) {
         console.log('✅ OTP verified successfully');
 
-        // Store user data
-        if (response.user) {
-          AuthStorage.setItem('user', response.user);
-          AuthStorage.setItem('token', response.token);
+        const rememberSession = document.getElementById('remember-session')?.checked;
+        if (response.user && response.token) {
+          authStorage.login(response.user, response.token, rememberSession);
         }
 
-        // Show success
         OTPManager.showOTPSuccess();
         this.showNotification('Login successful! Redirecting...', 'success');
 
-        // Redirect to dashboard after 1.5 seconds
         setTimeout(() => {
           window.location.href = 'dashboard.html';
         }, 1500);
@@ -297,23 +282,10 @@ const LoginOTP = {
    */
   async verifyOTPWithBackend(mobile, otp) {
     try {
-      const response = await fetch('/api/auth/verify-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          mobile: mobile,
-          otp: otp,
-          countryCode: '+91'
-        })
+      const data = await AuthAPI.post('/api/auth/mobile-login', {
+        mobile: mobile,
+        otp: otp
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
       return data;
     } catch (error) {
       console.error('❌ Error verifying OTP with backend:', error);
@@ -460,7 +432,7 @@ const LoginOTP = {
    * Check if already authenticated
    */
   checkAuthStatus() {
-    if (AuthStorage.getItem('token')) {
+    if (window.authStorage.getToken()) {
       console.log('✅ User already authenticated, redirecting...');
       window.location.href = 'dashboard.html';
     }

@@ -294,8 +294,8 @@ const SignupOTP = {
         console.log('✅ OTP sent successfully');
 
         // Store mobile temporarily
-        AuthStorage.setItem('temp_mobile', this.state.formData.mobile);
-        AuthStorage.setItem('signup_data', this.state.formData);
+        window.authStorage.setItem('temp_mobile', this.state.formData.mobile);
+        window.authStorage.setItem('signup_data', this.state.formData);
 
         // Show OTP input step
         this.showOTPStep();
@@ -336,23 +336,10 @@ const SignupOTP = {
    */
   async sendOTPToBackend(mobile) {
     try {
-      const response = await fetch('/api/auth/send-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          mobile: mobile,
-          countryCode: '+91',
-          type: 'signup'
-        })
+      const data = await AuthAPI.post('/api/auth/send-otp', {
+        mobile: mobile,
+        type: 'signup'
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
       return data;
     } catch (error) {
       console.error('❌ Error sending OTP:', error);
@@ -403,18 +390,14 @@ const SignupOTP = {
       if (response.success) {
         console.log('✅ Account created successfully');
 
-        // Store user data
-        if (response.user) {
-          AuthStorage.setItem('user', response.user);
-          AuthStorage.setItem('token', response.token);
+        if (response.user && response.token) {
+          authStorage.login(response.user, response.token, true);
         }
 
-        // Show success
         OTPManager.showOTPSuccess();
         this.updateProgressIndicator(3);
         this.showNotification('Account created successfully! Redirecting...', 'success');
 
-        // Redirect to dashboard after 1.5 seconds
         setTimeout(() => {
           window.location.href = 'dashboard.html';
         }, 1500);
@@ -438,25 +421,12 @@ const SignupOTP = {
    */
   async createAccountWithOTP(otp) {
     try {
-      const response = await fetch('/api/auth/signup-verify-otp', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          fullName: this.state.formData.fullName,
-          mobile: this.state.formData.mobile,
-          email: this.state.formData.email,
-          otp: otp,
-          countryCode: '+91'
-        })
+      const data = await AuthAPI.post('/api/auth/signup-verify-otp', {
+        fullName: this.state.formData.fullName,
+        mobile: this.state.formData.mobile,
+        email: this.state.formData.email,
+        otp: otp
       });
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
       return data;
     } catch (error) {
       console.error('❌ Error creating account:', error);
@@ -625,7 +595,7 @@ const SignupOTP = {
    * Check if already authenticated
    */
   checkAuthStatus() {
-    if (AuthStorage.getItem('token')) {
+    if (window.authStorage.getToken()) {
       console.log('✅ User already authenticated, redirecting...');
       window.location.href = 'dashboard.html';
     }

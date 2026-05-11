@@ -6,6 +6,19 @@
 /* Import global styles */
 @import url('./global.css');
 
+:root {
+  --auth-bg: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  --auth-surface: rgba(255, 255, 255, 0.93);
+  --auth-shadow: 0 30px 90px rgba(15, 23, 42, 0.18);
+  --auth-border: rgba(148, 163, 184, 0.14);
+  --auth-primary: #4f46e5;
+  --auth-primary-hover: #4338ca;
+  --auth-text: #0f172a;
+  --auth-text-muted: #475569;
+  --auth-error: #ef4444;
+  --auth-shadow-hover: 0 16px 30px rgba(79, 70, 229, 0.25);
+}
+
 /* ============================================
    AUTHENTICATION MAIN CONTAINER
    ============================================ */
@@ -269,6 +282,72 @@
   pointer-events: none;
 }
 
+.otp-inputs-container {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.otp-input {
+  width: 100%;
+  min-height: 64px;
+  border-radius: 16px;
+  border: 2px solid #e5e7eb;
+  text-align: center;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.25rem;
+  color: var(--auth-text);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.otp-input:focus {
+  outline: none;
+  border-color: var(--auth-primary);
+  box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
+}
+
+.otp-timer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--auth-text-muted);
+}
+
+.resend-link {
+  font-size: 0.95rem;
+  color: var(--auth-text-muted);
+}
+
+.resend-link a {
+  color: var(--auth-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.resend-link a.disabled,
+.resend-link a.disabled:hover {
+  pointer-events: none;
+  color: #94a3b8;
+}
+
+.auth-footer-links {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.auth-footer-links .link {
+  color: var(--auth-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.auth-footer-links .link:hover {
+  text-decoration: underline;
+}
+
 /* Password Toggle */
 .password-toggle {
   position: absolute;
@@ -400,7 +479,8 @@
   transition: all 0.3s ease;
 }
 
-.error-message.show {
+.error-message.show,
+.error-message.visible {
   opacity: 1;
   transform: translateY(0);
 }

@@ -16,6 +16,18 @@ def create_user(name: str, email: str, password_hash: str) -> int:
         return cursor.lastrowid
 
 
+def create_user_mobile(name: str, email: str, mobile: str) -> int:
+    with get_connection() as conn:
+        cursor = conn.execute(
+            """
+            INSERT INTO users (name, email, mobile, mobile_verified, profile_status)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (name, email.lower().strip(), mobile.strip(), 1, "partial"),
+        )
+        return cursor.lastrowid
+
+
 def get_user_by_email(email: str):
     with get_connection() as conn:
         return conn.execute("SELECT * FROM users WHERE email = ?", (email.lower().strip(),)).fetchone()
@@ -121,7 +133,7 @@ def reset_login_failures(user_id: int) -> None:
         )
 
 
-def record_activity(user_id: int | None, action: str, ip_address: str | None) -> None:
+def record_activity(user_id, action, ip_address):
     with get_connection() as conn:
         conn.execute(
             """

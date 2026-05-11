@@ -198,7 +198,13 @@ class DashboardManager {
   }
 
   // Logout user
-  logout() {
+  async logout() {
+    try {
+      await AuthAPI.post('/api/auth/logout');
+    } catch (error) {
+      console.warn('Logout request failed:', error);
+    }
+
     if (window.authStorage) {
       window.authStorage.clearAuthState();
     }

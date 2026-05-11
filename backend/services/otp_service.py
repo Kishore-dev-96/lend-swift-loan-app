@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import secrets
+from typing import Optional
 
 from ..config import (
     OTP_EXPIRATION_SECONDS,
@@ -16,7 +17,7 @@ def _now() -> datetime:
     return datetime.now(timezone.utc)
 
 
-def _parse_time(value: str | None) -> datetime | None:
+def _parse_time(value: Optional[str]) -> Optional[datetime]:
     if not value:
         return None
     return datetime.fromisoformat(value)

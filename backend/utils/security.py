@@ -5,13 +5,13 @@ import json
 import os
 import secrets
 import time
-from typing import Any
+from typing import Any, Dict, Optional
 
 import bcrypt
 import jwt
 from cryptography.fernet import Fernet, InvalidToken
 
-from .config import AES_KEY, JWT_ALGORITHM, JWT_COOKIE_NAME, JWT_EXPIRATION_SECONDS, JWT_SECRET
+from ..config import AES_KEY, JWT_ALGORITHM, JWT_COOKIE_NAME, JWT_EXPIRATION_SECONDS, JWT_SECRET
 
 
 def _get_cipher() -> Fernet:
@@ -43,12 +43,12 @@ def decrypt_pan(value: str) -> str:
         return ""
 
 
-def generate_jwt(payload: dict[str, Any], expires_in: int = JWT_EXPIRATION_SECONDS) -> str:
+def generate_jwt(payload: Dict[str, Any], expires_in: int = JWT_EXPIRATION_SECONDS) -> str:
     payload = {**payload, "exp": int(time.time()) + expires_in}
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
 
-def verify_jwt(token: str) -> dict[str, Any] | None:
+def verify_jwt(token: str) -> Optional[Dict[str, Any]]:
     try:
         data = jwt.decode(token, JWT_SECRET, algorithms=[JWT_ALGORITHM])
         return data
@@ -74,5 +74,9 @@ def generate_csrf_token() -> str:
     return secrets.token_urlsafe(32)
 
 
-def constant_time_compare(value1: str, value2: str) -> bool:
-    return hmac.compare_digest(value1, value2)
+def hash_value(value: str) -> str:
+    return hash_password(value)
+
+
+def verify_hash(value: str, hash: str) -> bool:
+    return verify_password(value, hash)

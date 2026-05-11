@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Verification - LendSwift AI</title>
+    <meta name="description" content="Verify your account with OTP">
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/auth-responsive.css">
+</head>
+<body data-page="otp-verification">
+    <!-- Navbar -->
+    <header class="navbar" data-navbar>
+        <a class="brand" href="index.html" aria-label="LendSwift AI home">
+            <div class="brand-mark">
+                <span class="logo-icon">💰</span>
+            </div>
+            <div class="brand-text">
+                <span class="brand-name">Lend Swift AI</span>
+                <span class="brand-tagline">Smart Lending</span>
+            </div>
+        </a>
+
+        <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-menu-toggle>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+
+        <nav class="nav-links" data-nav-links aria-label="Main navigation">
+            <a href="index.html" class="nav-link">Home</a>
+            <a href="index.html#features" class="nav-link">Features</a>
+        </nav>
+
+        <div class="nav-cta">
+            <a href="index.html" class="btn btn-outline">Back to Home</a>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="auth-main">
+        <div class="auth-container" style="max-width: 500px;">
+            <!-- OTP Verification Panel -->
+            <div class="auth-panel auth-panel-right" style="max-width: 100%;">
+                <div class="auth-form-container">
+                    <div class="auth-header">
+                        <h2>Verify Your Account</h2>
+                        <p id="otp-description">Enter the 6-digit OTP sent to your mobile</p>
+                    </div>
+
+                    <!-- Status Messages -->
+                    <div id="status-container"></div>
+
+                    <form class="auth-form" id="otp-form" novalidate>
+                        <!-- OTP Instructions -->
+                        <div style="text-align: center; padding: var(--space-4); background-color: var(--bg-secondary); border-radius: var(--radius-lg); margin-bottom: var(--space-6);">
+                            <p style="margin: 0; font-size: 0.9rem; color: var(--text-secondary);">
+                                OTP sent to <strong id="otp-mobile-display">••••••••••</strong>
+                            </p>
+                        </div>
+
+                        <!-- OTP Input Fields -->
+                        <div class="form-group">
+                            <label for="otp-1" class="form-label">Enter 6-Digit OTP <span style="color: var(--error);">*</span></label>
+                            <div class="otp-inputs-container">
+                                <input type="text" id="otp-1" class="otp-input" maxlength="1" inputmode="numeric" placeholder="0" required>
+                                <input type="text" id="otp-2" class="otp-input" maxlength="1" inputmode="numeric" placeholder="0" required>
+                                <input type="text" id="otp-3" class="otp-input" maxlength="1" inputmode="numeric" placeholder="0" required>
+                                <input type="text" id="otp-4" class="otp-input" maxlength="1" inputmode="numeric" placeholder="0" required>
+                                <input type="text" id="otp-5" class="otp-input" maxlength="1" inputmode="numeric" placeholder="0" required>
+                                <input type="text" id="otp-6" class="otp-input" maxlength="1" inputmode="numeric" placeholder="0" required>
+                            </div>
+                            <div class="error-message" id="otp-error"></div>
+                        </div>
+
+                        <!-- OTP Timer -->
+                        <div class="otp-timer-container">
+                            <span class="otp-timer" id="otp-timer">OTP expires in <span id="otp-countdown">300</span>s</span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="auth-button" id="verify-otp-btn">
+                            <span class="button-text">Verify OTP</span>
+                            <div class="button-loader hidden">
+                                <div class="spinner"></div>
+                            </div>
+                        </button>
+
+                        <!-- Resend Link -->
+                        <div class="resend-link">
+                            Didn't receive OTP?
+                            <a href="#" id="resend-otp-link" class="disabled">Resend in <span id="resend-countdown">30</span>s</a>
+                        </div>
+
+                        <!-- Change Mobile Button -->
+                        <button type="button" class="btn btn-outline" id="change-mobile-btn" style="margin-top: var(--space-6);">
+                            Change Mobile Number
+                        </button>
+
+                        <!-- Footer Links -->
+                        <div class="auth-footer-links" style="margin-top: var(--space-6);">
+                            <a href="index.html" class="link">Back to Home</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast-notification" class="toast-notification hidden" role="status" aria-live="polite"></div>
+
+    <!-- Scripts -->
+    <script src="js/navbar.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/otp-handler.js"></script>
+</body>
+</html>
