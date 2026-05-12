@@ -114,14 +114,17 @@ def login():
         return jsonify({"error": "Missing or invalid CSRF token."}), 403
 
     payload = request.get_json(silent=True) or {}
-    email = (payload.get("email") or "").strip()
+    identifier = (payload.get("identifier") or "").strip()
     password = payload.get("password") or ""
 
-    if not validate_email(email):
-        return jsonify({"error": "Invalid email address."}), 400
+    if not identifier or not password:
+        return jsonify({"error": "Email/Mobile and password are required."}), 400
 
-    user = get_user_by_email(email)
-    if not user or not user["password_hash"]:
+    if not validate_email(identifier) and not validate_mobile(identifier):
+        return jsonify({"error": "Invalid email or mobile number."}), 400
+
+    user = get_user_by_email(identifier) if validate_email(identifier) else get_user_by_mobile(identifier)
+    if not user or not user.get("password_hash"):
         return jsonify({"error": "Invalid credentials."}), 401
 
     if is_account_locked(user):
@@ -183,6 +186,9 @@ def send_otp():
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 429
 
+    if not result.get("sent"):
+        return jsonify({"error": "Failed to send OTP. Please try again later."}), 500
+
     return jsonify({"success": True, "message": "OTP sent.", **result}), 200
 
 
@@ -199,6 +205,7 @@ def signup_verify_otp():
     name = (payload.get("fullName") or "").strip()
     email = (payload.get("email") or "").strip()
     mobile = (payload.get("mobile") or "").strip()
+    password = payload.get("password") or ""
     otp = (payload.get("otp") or "").strip()
 
     if not name or len(name) < 2:
@@ -207,6 +214,9 @@ def signup_verify_otp():
         return jsonify({"error": "Invalid email address."}), 400
     if not validate_mobile(mobile):
         return jsonify({"error": "Invalid mobile number."}), 400
+    is_valid_password, password_msg = validate_password(password)
+    if not is_valid_password:
+        return jsonify({"error": password_msg}), 400
     if not otp:
         return jsonify({"error": "OTP is required."}), 400
 
@@ -220,7 +230,7 @@ def signup_verify_otp():
     except ValueError as exc:
         return jsonify({"error": str(exc)}), 400
 
-    user_id = create_user_mobile(name, email, mobile)
+    user_id = create_user_mobile(name, email, mobile, hash_password(password))
     user = get_user_by_mobile(mobile)
     record_activity(user_id, "signup_mobile", request.remote_addr)
     return _get_user_token_response(user)

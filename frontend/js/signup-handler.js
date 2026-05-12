@@ -51,39 +51,40 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    // Show loading state
     showLoading();
 
-    // Simulate API call delay
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const result = await AuthAPI.post('/api/auth/send-otp', {
+        mobile,
+        type: 'signup'
+      });
 
-      // Attempt signup
-      const signupResult = AuthSystem.signup(fullName, email, mobile, password);
-
-      if (!signupResult.success) {
-        showToast(signupResult.message, 'error');
-        displayErrors({ general: signupResult.message });
+      if (!result.success) {
+        showToast(result.message || 'Unable to send OTP', 'error');
+        displayErrors({ general: result.message || 'Unable to send OTP' });
         hideLoading();
         return;
       }
 
-      // Signup successful - generate and send OTP
-      const userId = signupResult.userId;
-      const otp = AuthSystem.createOTP(mobile);
+      if (result.dev_otp) {
+        console.debug('Development OTP:', result.dev_otp);
+      }
 
-      showToast('Account created! Sending OTP...', 'success');
-      
-      // Store signup data in session for OTP page
-      sessionStorage.setItem('signup_user_id', userId);
-      sessionStorage.setItem('signup_mobile', mobile);
-      sessionStorage.setItem('signup_email', email);
-      sessionStorage.setItem('signup_name', fullName);
+      const signupData = {
+        fullName,
+        email,
+        mobile,
+        password
+      };
 
-      // Wait before redirecting
+      sessionStorage.setItem('signup_data', JSON.stringify(signupData));
+      sessionStorage.setItem('otp_sent_at', String(Date.now()));
+      sessionStorage.setItem('otp_expires_at', String(Date.now() + 300000));
+
+      showToast('OTP sent to your mobile. Please verify to complete signup.', 'success');
       setTimeout(() => {
         window.location.href = 'otp-verification.html';
-      }, 1500);
+      }, 1200);
     } catch (error) {
       console.error('Signup error:', error);
       showToast('An error occurred. Please try again.', 'error');
@@ -92,7 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // Real-time validation
-  document.getElementById('fullname').addEventListener('blur', () => {
+  document.getElementById('fullname').addEventListener('blur', function () {
     const value = this.value.trim();
     if (value && !isValidFullName(value)) {
       showFieldError('fullname', 'Please enter a valid full name (3+ characters)');
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('email').addEventListener('blur', () => {
+  document.getElementById('email').addEventListener('blur', function () {
     const value = this.value.trim();
     if (value && !AuthSystem.isValidEmail(value)) {
       showFieldError('email', 'Please enter a valid email address');
@@ -110,7 +111,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('mobile').addEventListener('blur', () => {
+  document.getElementById('mobile').addEventListener('blur', function () {
     const value = this.value.trim();
     if (value && !AuthSystem.isValidMobile(value)) {
       showFieldError('mobile', 'Please enter a valid 10-digit mobile number');
@@ -119,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('password').addEventListener('blur', () => {
+  document.getElementById('password').addEventListener('blur', function () {
     const value = this.value;
     if (value && !AuthSystem.isValidPassword(value)) {
       showFieldError('password', 'Password must be at least 8 characters');
@@ -128,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  document.getElementById('confirm-password').addEventListener('blur', () => {
+  document.getElementById('confirm-password').addEventListener('blur', function () {
     const password = document.getElementById('password').value;
     const value = this.value;
     if (value && !AuthSystem.passwordsMatch(password, value)) {

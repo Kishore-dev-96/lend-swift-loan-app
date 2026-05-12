@@ -23,27 +23,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Initialize OTP page
   function initOTPPage() {
-    // Get signup data from session
-    const userId = sessionStorage.getItem('signup_user_id');
-    const mobile = sessionStorage.getItem('signup_mobile');
-    const email = sessionStorage.getItem('signup_email');
-    const name = sessionStorage.getItem('signup_name');
-
-    if (!userId || !mobile) {
-      // No signup data, redirect to signup
+    const signupData = getSignupData();
+    if (!signupData || !signupData.mobile) {
       window.location.href = 'signup.html';
       return;
     }
 
-    // Display masked mobile
-    const maskedMobile = maskMobileNumber(mobile);
+    const maskedMobile = maskMobileNumber(signupData.mobile);
     otpMobileDisplay.textContent = maskedMobile;
-
-    // Start OTP timer
     startOTPTimer();
-
-    // Focus on first OTP input
     otpInputs[0].focus();
+  }
+
+  function getSignupData() {
+    try {
+      const saved = sessionStorage.getItem('signup_data');
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
   }
 
   // Mask mobile number
@@ -125,64 +123,48 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const otpValue = Array.from(otpInputs).map(input => input.value).join('');
 
-    // Validate OTP
     if (!otpValue || otpValue.length !== 6 || !/^\d{6}$/.test(otpValue)) {
       showFieldError('otp', 'Please enter a valid 6-digit OTP');
       showToast('Please enter all 6 digits', 'error');
       return;
     }
 
+    const signupData = getSignupData();
+    if (!signupData) {
+      window.location.href = 'signup.html';
+      return;
+    }
+
     showLoading();
 
     try {
-      // Simulate API delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const result = await AuthAPI.post('/api/auth/signup-verify-otp', {
+        fullName: signupData.fullName,
+        email: signupData.email,
+        mobile: signupData.mobile,
+        password: signupData.password,
+        otp: otpValue
+      });
 
-      // Verify OTP
-      const verifyResult = AuthSystem.verifyOTP(otpValue);
-
-      if (!verifyResult.success) {
-        showToast(verifyResult.message, 'error');
-        showFieldError('otp', verifyResult.message);
+      if (!result.success) {
+        showToast(result.message || 'Invalid OTP or verification failed', 'error');
+        showFieldError('otp', result.message || 'Invalid OTP');
         clearOTPInputs();
         otpInputs[0].focus();
         hideLoading();
         return;
       }
 
-      // OTP verified successfully
-      const userId = sessionStorage.getItem('signup_user_id');
-
-      // Mark user as verified
-      const verifyUserResult = AuthSystem.verifyUserEmail(userId);
-
-      if (!verifyUserResult.success) {
-        showToast('Verification failed', 'error');
-        hideLoading();
-        return;
-      }
-
-      // Create session
-      const sessionResult = AuthSystem.createSession(userId);
-
-      if (!sessionResult.success) {
-        showToast('Session creation failed', 'error');
-        hideLoading();
-        return;
-      }
-
+      window.authStorage.login(result.user, result.token, false);
       showToast('Account verified successfully! 🎉', 'success');
 
-      // Clear session data
-      sessionStorage.removeItem('signup_user_id');
-      sessionStorage.removeItem('signup_mobile');
-      sessionStorage.removeItem('signup_email');
-      sessionStorage.removeItem('signup_name');
+      sessionStorage.removeItem('signup_data');
+      sessionStorage.removeItem('otp_sent_at');
+      sessionStorage.removeItem('otp_expires_at');
 
-      // Redirect to dashboard
       setTimeout(() => {
         window.location.href = 'dashboard.html';
-      }, 1500);
+      }, 1200);
     } catch (error) {
       console.error('OTP verification error:', error);
       showToast('An error occurred. Please try again.', 'error');
@@ -198,26 +180,38 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
+    const signupData = getSignupData();
+    if (!signupData || !signupData.mobile) {
+      window.location.href = 'signup.html';
+      return;
+    }
+
     try {
-      const mobile = sessionStorage.getItem('signup_mobile');
-      
-      // Generate new OTP
-      const newOTP = AuthSystem.createOTP(mobile);
+      const result = await AuthAPI.post('/api/auth/send-otp', {
+        mobile: signupData.mobile,
+        type: 'signup'
+      });
+
+      if (!result.success) {
+        showToast(result.message || 'Unable to resend OTP', 'error');
+        return;
+      }
+
+      if (result.dev_otp) {
+        console.debug('Development OTP:', result.dev_otp);
+      }
 
       showToast('OTP resent successfully! Check your mobile.', 'success');
-
-      // Reset timers
       clearOTPInputs();
       otpInputs[0].focus();
 
-      otpTimeRemaining = 300;
-      resendTimeRemaining = 30;
+      const expiresAt = Date.now() + 300000;
+      sessionStorage.setItem('otp_sent_at', String(Date.now()));
+      sessionStorage.setItem('otp_expires_at', String(expiresAt));
 
       clearInterval(otpExpiryTimer);
       clearInterval(resendExpiryTimer);
-
       startOTPTimer();
-      startResendTimer();
     } catch (error) {
       console.error('Resend OTP error:', error);
       showToast('Failed to resend OTP', 'error');
@@ -227,22 +221,23 @@ document.addEventListener('DOMContentLoaded', () => {
   // Change mobile number
   changeMobileBtn.addEventListener('click', (e) => {
     e.preventDefault();
-    sessionStorage.removeItem('signup_user_id');
-    sessionStorage.removeItem('signup_mobile');
-    sessionStorage.removeItem('signup_email');
-    sessionStorage.removeItem('signup_name');
+    sessionStorage.removeItem('signup_data');
+    sessionStorage.removeItem('otp_sent_at');
+    sessionStorage.removeItem('otp_expires_at');
     window.location.href = 'signup.html';
   });
 
   // Timer functions
   function startOTPTimer() {
-    otpTimeRemaining = AuthSystem.getOTPTimeRemaining();
+    const expiresAt = Number(sessionStorage.getItem('otp_expires_at')) || Date.now() + 300000;
+    otpTimeRemaining = Math.max(0, Math.ceil((expiresAt - Date.now()) / 1000));
+
+    otpCountdown.textContent = otpTimeRemaining;
 
     otpExpiryTimer = setInterval(() => {
-      otpTimeRemaining--;
+      otpTimeRemaining = Math.max(0, otpTimeRemaining - 1);
       otpCountdown.textContent = otpTimeRemaining;
 
-      // Update timer appearance
       if (otpTimeRemaining <= 60) {
         otpTimer.classList.add('expired');
       }

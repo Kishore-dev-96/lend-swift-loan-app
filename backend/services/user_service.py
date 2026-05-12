@@ -16,15 +16,24 @@ def create_user(name: str, email: str, password_hash: str) -> int:
         return cursor.lastrowid
 
 
-def create_user_mobile(name: str, email: str, mobile: str) -> int:
+def create_user_mobile(name: str, email: str, mobile: str, password_hash: str = None) -> int:
     with get_connection() as conn:
-        cursor = conn.execute(
-            """
-            INSERT INTO users (name, email, mobile, mobile_verified, profile_status)
-            VALUES (?, ?, ?, ?, ?)
-            """,
-            (name, email.lower().strip(), mobile.strip(), 1, "partial"),
-        )
+        if password_hash:
+            cursor = conn.execute(
+                """
+                INSERT INTO users (name, email, mobile, mobile_verified, profile_status, password_hash)
+                VALUES (?, ?, ?, ?, ?, ?)
+                """,
+                (name, email.lower().strip(), mobile.strip(), 1, "partial", password_hash),
+            )
+        else:
+            cursor = conn.execute(
+                """
+                INSERT INTO users (name, email, mobile, mobile_verified, profile_status)
+                VALUES (?, ?, ?, ?, ?)
+                """,
+                (name, email.lower().strip(), mobile.strip(), 1, "partial"),
+            )
         return cursor.lastrowid
 
 

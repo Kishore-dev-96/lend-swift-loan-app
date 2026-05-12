@@ -26,60 +26,44 @@ document.addEventListener('DOMContentLoaded', () => {
     e.preventDefault();
     clearErrors();
 
-    // Get form data
     const identifier = document.getElementById('identifier').value.trim();
     const password = document.getElementById('password').value;
     const rememberMe = document.getElementById('remember-me').checked;
 
-    // Validate
     const errors = validateLoginForm({ identifier, password });
-
     if (Object.keys(errors).length > 0) {
       displayErrors(errors);
       showToast('Please fix the errors below', 'error');
       return;
     }
 
-    // Show loading state
     showLoading();
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const result = await AuthAPI.post('/api/auth/login', {
+        identifier,
+        password
+      });
 
-      // Attempt login
-      const loginResult = AuthSystem.login(identifier, password);
-
-      if (!loginResult.success) {
-        showToast(loginResult.message, 'error');
-        displayErrors({ general: loginResult.message });
+      if (!result.success) {
+        showToast(result.message || 'Invalid login credentials', 'error');
+        displayErrors({ general: result.message || 'Invalid login credentials' });
         hideLoading();
         return;
       }
 
-      // Login successful
-      const userId = loginResult.userId;
-
-      // Create session
-      const sessionResult = AuthSystem.createSession(userId);
-      
-      if (!sessionResult.success) {
-        showToast('Session error', 'error');
-        hideLoading();
-        return;
-      }
-
+      window.authStorage.login(result.user, result.token, rememberMe);
       showToast('Login successful! 🎉', 'success');
 
-      // Store remember me preference
       if (rememberMe) {
         localStorage.setItem('lendswift_remember_me', identifier);
+      } else {
+        localStorage.removeItem('lendswift_remember_me');
       }
 
-      // Redirect to dashboard
       setTimeout(() => {
         window.location.href = 'dashboard.html';
-      }, 1500);
+      }, 1200);
     } catch (error) {
       console.error('Login error:', error);
       showToast('An error occurred. Please try again.', 'error');
