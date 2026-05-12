@@ -8,5 +8,6 @@ pypdf
 pytesseract
 opencv-python
 twilio
+requests
 waitress
 python-dotenv
