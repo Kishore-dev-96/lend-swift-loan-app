@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Contact LendSwift AI - Get support and inquiries answered by our customer care team.">
+    <title>Contact Us | LendSwift AI</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/contact.css">
+  </head>
+  <body data-page="contact">
+    <header class="navbar" data-navbar>
+      <!-- Brand Logo -->
+      <a class="brand" href="index.html" aria-label="LendSwift AI home">
+        <div class="brand-mark">
+          <span class="logo-icon">💰</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Lend Swift AI</span>
+          <span class="brand-tagline">Smart Lending Platform</span>
+        </div>
+      </a>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-menu-toggle>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links" data-nav-links aria-label="Main navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#features" class="nav-link">Features</a>
+        <a href="loan-types.html" class="nav-link">Loan Types</a>
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link active">Contact</a>
+      </nav>
+
+      <!-- CTA Buttons -->
+      <div class="nav-cta">
+        <a href="login.html" class="btn btn-outline btn-login" id="navbar-login-btn">Login</a>
+        <a href="signup.html" class="btn btn-primary btn-signup" id="navbar-signup-btn">Sign Up</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="contact-section">
+        <div class="section-header">
+          <h1>Get In Touch</h1>
+          <p>We're here to help. Contact our customer care team.</p>
+        </div>
+
+        <div class="contact-container">
+          <!-- Contact Form -->
+          <div class="contact-form-wrapper">
+            <h2>Send us a Message</h2>
+            <form id="contact-form" class="contact-form" novalidate>
+              <div class="form-group">
+                <label for="contact-name">Full Name *</label>
+                <input 
+                  type="text" 
+                  id="contact-name" 
+                  name="name" 
+                  required 
+                  placeholder="Your full name"
+                  aria-required="true"
+                >
+                <span class="error-message" id="name-error"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-email">Email Address *</label>
+                <input 
+                  type="email" 
+                  id="contact-email" 
+                  name="email" 
+                  required 
+                  placeholder="your@email.com"
+                  aria-required="true"
+                >
+                <span class="error-message" id="email-error"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-mobile">Mobile Number *</label>
+                <input 
+                  type="tel" 
+                  id="contact-mobile" 
+                  name="mobile" 
+                  required 
+                  placeholder="10-digit mobile number"
+                  aria-required="true"
+                >
+                <span class="error-message" id="mobile-error"></span>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-message">Message *</label>
+                <textarea 
+                  id="contact-message" 
+                  name="message" 
+                  required 
+                  rows="5" 
+                  placeholder="Please share your message or inquiry"
+                  aria-required="true"
+                ></textarea>
+                <span class="error-message" id="message-error"></span>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-submit" id="submit-contact">
+                <span class="btn-text">Send Message</span>
+                <span class="btn-loader" style="display: none;">Sending...</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- Company Info & FAQ -->
+          <div class="contact-info-wrapper">
+            <!-- Company Information -->
+            <div class="company-info">
+              <h2>Company Information</h2>
+              <div class="info-item">
+                <div class="info-icon">📍</div>
+                <div class="info-content">
+                  <h4>Address</h4>
+                  <p>LendSwift AI<br>Innovation Plaza, Tech Park<br>Bangalore, India 560001</p>
+                </div>
+              </div>
+              <div class="info-item">
+                <div class="info-icon">✉️</div>
+                <div class="info-content">
+                  <h4>Email</h4>
+                  <p><a href="mailto:support@lendswift.com">support@lendswift.com</a><br>
+                     <a href="mailto:sales@lendswift.com">sales@lendswift.com</a></p>
+                </div>
+              </div>
+              <div class="info-item">
+                <div class="info-icon">📞</div>
+                <div class="info-content">
+                  <h4>Customer Care</h4>
+                  <p><strong>Toll Free:</strong> 1800-LEND-SWIFT<br>
+                     <strong>Direct:</strong> +91-80-1234-5678</p>
+                </div>
+              </div>
+              <div class="info-item">
+                <div class="info-icon">🕐</div>
+                <div class="info-content">
+                  <h4>Working Hours</h4>
+                  <p>Monday - Friday: 9:00 AM - 6:00 PM<br>
+                     Saturday: 10:00 AM - 2:00 PM<br>
+                     Sunday: Closed</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+              <h2>Frequently Asked Questions</h2>
+              <div class="faq-items">
+                <details class="faq-item">
+                  <summary>How long does loan approval take?</summary>
+                  <p>Most applications are processed within 24-48 hours. Instant pre-approval is available for eligible customers.</p>
+                </details>
+                <details class="faq-item">
+                  <summary>What documents do I need?</summary>
+                  <p>Typically, you'll need identity proof, address proof, income documents, and bank statements. Requirements may vary by loan type.</p>
+                </details>
+                <details class="faq-item">
+                  <summary>Can I prepay my loan?</summary>
+                  <p>Yes, you can prepay your loan anytime without penalty. This can help you save on interest.</p>
+                </details>
+                <details class="faq-item">
+                  <summary>Is my data secure?</summary>
+                  <p>We use military-grade encryption and comply with all data protection regulations. Your information is completely secure.</p>
+                </details>
+                <details class="faq-item">
+                  <summary>What if I'm rejected?</summary>
+                  <p>You'll receive detailed feedback on your application. Our loan advisors can suggest alternatives or areas to improve.</p>
+                </details>
+                <details class="faq-item">
+                  <summary>Do you offer EMI calculators?</summary>
+                  <p>Yes, our AI-powered EMI calculator provides instant calculations for different loan amounts and tenures.</p>
+                </details>
+              </div>
+            </div>
+
+            <!-- Social Media -->
+            <div class="social-links">
+              <h3>Follow Us</h3>
+              <div class="social-icons">
+                <a href="#" aria-label="Facebook" class="social-icon">f</a>
+                <a href="#" aria-label="Twitter" class="social-icon">𝕏</a>
+                <a href="#" aria-label="LinkedIn" class="social-icon">in</a>
+                <a href="#" aria-label="Instagram" class="social-icon">📷</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Success/Error Toast -->
+      <div id="toast" class="toast" role="alert" aria-hidden="true"></div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>LendSwift AI</h4>
+          <p>Smart lending platform with AI-powered eligibility analysis.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="loan-types.html">Loan Types</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>Email: support@lendswift.com<br>Phone: +91 1800-LEND-SWIFT</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 LendSwift AI. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/auth-storage.js"></script>
+    <script src="js/auth-check.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/contact.js"></script>
+    <script src="js/navbar.js"></script>
+  </body>
+</html>

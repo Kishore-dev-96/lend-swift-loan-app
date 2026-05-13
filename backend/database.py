@@ -64,6 +64,41 @@ def init_db():
             )
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS contact_messages (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                email TEXT NOT NULL,
+                mobile TEXT NOT NULL,
+                message TEXT NOT NULL,
+                subject TEXT,
+                status TEXT DEFAULT 'unread',
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                updated_at TEXT DEFAULT CURRENT_TIMESTAMP
+            )
+            """
+        )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS loan_applications (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                loan_type TEXT NOT NULL,
+                loan_amount REAL NOT NULL,
+                monthly_income REAL NOT NULL,
+                status TEXT DEFAULT 'submitted',
+                eligibility_score REAL,
+                approved_amount REAL,
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                updated_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY(user_id) REFERENCES users(id) ON DELETE CASCADE
+            )
+            """
+        )
         conn.execute("CREATE INDEX IF NOT EXISTS idx_users_email ON users(email)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_users_mobile ON users(mobile)")
         conn.execute("CREATE INDEX IF NOT EXISTS idx_otp_mobile_created ON otp_logs(mobile, created_at)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_contact_email ON contact_messages(email)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_loan_user ON loan_applications(user_id)")
+        conn.execute("CREATE INDEX IF NOT EXISTS idx_loan_status ON loan_applications(status)")

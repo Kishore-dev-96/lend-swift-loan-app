@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Explore LendSwift's loan products including Personal, Home, Education, Vehicle, Business, and Gold Loans.">
+    <title>Loan Types | LendSwift AI</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/loan-types.css">
+  </head>
+  <body data-page="loan-types">
+    <header class="navbar" data-navbar>
+      <!-- Brand Logo -->
+      <a class="brand" href="index.html" aria-label="LendSwift AI home">
+        <div class="brand-mark">
+          <span class="logo-icon">💰</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Lend Swift AI</span>
+          <span class="brand-tagline">Smart Lending Platform</span>
+        </div>
+      </a>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-menu-toggle>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links" data-nav-links aria-label="Main navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#features" class="nav-link">Features</a>
+        <a href="loan-types.html" class="nav-link active">Loan Types</a>
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </nav>
+
+      <!-- CTA Buttons -->
+      <div class="nav-cta">
+        <a href="login.html" class="btn btn-outline btn-login" id="navbar-login-btn">Login</a>
+        <a href="signup.html" class="btn btn-primary btn-signup" id="navbar-signup-btn">Sign Up</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="loan-types-section">
+        <div class="section-header">
+          <h1>Our Loan Products</h1>
+          <p>Choose the perfect loan for your financial needs</p>
+        </div>
+
+        <div class="loan-cards-grid" id="loan-cards-container">
+          <!-- Loan cards will be dynamically generated -->
+        </div>
+      </section>
+
+      <!-- Success/Error Toast -->
+      <div id="toast" class="toast" role="alert" aria-hidden="true"></div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>LendSwift AI</h4>
+          <p>Smart lending platform with AI-powered eligibility analysis.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="loan-types.html">Loan Types</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>Email: support@lendswift.com<br>Phone: +91 1800-LEND-SWIFT</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 LendSwift AI. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/auth-storage.js"></script>
+    <script src="js/auth-check.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/loan-types.js"></script>
+    <script src="js/navbar.js"></script>
+  </body>
+</html>

@@ -9,6 +9,7 @@ from .database import init_db
 from .routes.auth import auth_bp
 from .routes.kyc import kyc_bp
 from .routes.user import user_bp
+from .routes.pages import pages_bp
 
 
 def create_app():
@@ -33,6 +34,7 @@ def create_app():
     app.register_blueprint(auth_bp)
     app.register_blueprint(kyc_bp)
     app.register_blueprint(user_bp)
+    app.register_blueprint(pages_bp)
 
     @app.route("/")
     def index():

@@ -1,0 +1,339 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Apply for a loan with LendSwift AI. Quick and secure loan application process.">
+    <title>Apply for Loan | LendSwift AI</title>
+    <link rel="icon" href="data:,">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/navbar.css">
+    <link rel="stylesheet" href="css/apply-loan.css">
+  </head>
+  <body data-page="apply-loan">
+    <header class="navbar" data-navbar>
+      <!-- Brand Logo -->
+      <a class="brand" href="index.html" aria-label="LendSwift AI home">
+        <div class="brand-mark">
+          <span class="logo-icon">💰</span>
+        </div>
+        <div class="brand-text">
+          <span class="brand-name">Lend Swift AI</span>
+          <span class="brand-tagline">Smart Lending Platform</span>
+        </div>
+      </a>
+
+      <!-- Mobile Menu Toggle -->
+      <button class="menu-toggle" type="button" aria-label="Toggle navigation menu" aria-expanded="false" data-menu-toggle>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+
+      <!-- Navigation Links -->
+      <nav class="nav-links" data-nav-links aria-label="Main navigation">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#features" class="nav-link">Features</a>
+        <a href="loan-types.html" class="nav-link">Loan Types</a>
+        <a href="index.html#about" class="nav-link">About</a>
+        <a href="contact.html" class="nav-link">Contact</a>
+      </nav>
+
+      <!-- CTA Buttons -->
+      <div class="nav-cta">
+        <a href="login.html" class="btn btn-outline btn-login" id="navbar-login-btn">Login</a>
+        <a href="signup.html" class="btn btn-primary btn-signup" id="navbar-signup-btn">Sign Up</a>
+      </div>
+    </header>
+
+    <main>
+      <section class="apply-loan-section">
+        <div class="section-header">
+          <h1>Loan Application</h1>
+          <p>Begin your loan application journey with LendSwift AI</p>
+        </div>
+
+        <div class="apply-loan-container">
+          <div class="application-form-wrapper">
+            <div class="form-progress">
+              <div class="progress-step active" data-step="1">
+                <span class="step-number">1</span>
+                <span class="step-label">Basic Info</span>
+              </div>
+              <div class="progress-line"></div>
+              <div class="progress-step" data-step="2">
+                <span class="step-number">2</span>
+                <span class="step-label">Loan Details</span>
+              </div>
+              <div class="progress-line"></div>
+              <div class="progress-step" data-step="3">
+                <span class="step-number">3</span>
+                <span class="step-label">Review</span>
+              </div>
+            </div>
+
+            <form id="loan-application-form" class="loan-application-form" novalidate>
+              <!-- Step 1: Basic Information -->
+              <fieldset class="form-step active" data-step="1" id="step-1">
+                <legend><h2>Personal Information</h2></legend>
+                
+                <div class="form-group">
+                  <label for="app-full-name">Full Name *</label>
+                  <input 
+                    type="text" 
+                    id="app-full-name" 
+                    name="fullName" 
+                    required 
+                    placeholder="Your full name"
+                    aria-required="true"
+                  >
+                  <span class="error-message" id="fullName-error"></span>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="app-mobile">Mobile Number *</label>
+                    <input 
+                      type="tel" 
+                      id="app-mobile" 
+                      name="mobile" 
+                      required 
+                      placeholder="10-digit number"
+                      aria-required="true"
+                    >
+                    <span class="error-message" id="mobile-error"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="app-email">Email Address *</label>
+                    <input 
+                      type="email" 
+                      id="app-email" 
+                      name="email" 
+                      required 
+                      placeholder="your@email.com"
+                      aria-required="true"
+                    >
+                    <span class="error-message" id="email-error"></span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="app-dob">Date of Birth *</label>
+                  <input 
+                    type="date" 
+                    id="app-dob" 
+                    name="dob" 
+                    required 
+                    aria-required="true"
+                  >
+                  <span class="error-message" id="dob-error"></span>
+                </div>
+              </fieldset>
+
+              <!-- Step 2: Loan Details -->
+              <fieldset class="form-step" data-step="2" id="step-2">
+                <legend><h2>Loan Details</h2></legend>
+
+                <div class="form-group">
+                  <label for="app-loan-type">Loan Type *</label>
+                  <select 
+                    id="app-loan-type" 
+                    name="loanType" 
+                    required 
+                    aria-required="true"
+                  >
+                    <option value="">Select a loan type</option>
+                    <option value="personal">Personal Loan</option>
+                    <option value="home">Home Loan</option>
+                    <option value="education">Education Loan</option>
+                    <option value="vehicle">Vehicle Loan</option>
+                    <option value="business">Business Loan</option>
+                    <option value="gold">Gold Loan</option>
+                  </select>
+                  <span class="error-message" id="loanType-error"></span>
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="app-loan-amount">Desired Loan Amount (₹) *</label>
+                    <input 
+                      type="number" 
+                      id="app-loan-amount" 
+                      name="loanAmount" 
+                      required 
+                      placeholder="100000"
+                      min="50000"
+                      aria-required="true"
+                    >
+                    <span class="error-message" id="loanAmount-error"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="app-loan-tenure">Tenure (Months) *</label>
+                    <select 
+                      id="app-loan-tenure" 
+                      name="tenure" 
+                      required 
+                      aria-required="true"
+                    >
+                      <option value="">Select tenure</option>
+                      <option value="12">12 months</option>
+                      <option value="24">24 months</option>
+                      <option value="36">36 months</option>
+                      <option value="48">48 months</option>
+                      <option value="60">60 months</option>
+                    </select>
+                    <span class="error-message" id="tenure-error"></span>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="app-monthly-income">Monthly Income (₹) *</label>
+                  <input 
+                    type="number" 
+                    id="app-monthly-income" 
+                    name="monthlyIncome" 
+                    required 
+                    placeholder="50000"
+                    min="0"
+                    aria-required="true"
+                  >
+                  <span class="error-message" id="monthlyIncome-error"></span>
+                </div>
+
+                <div class="form-group">
+                  <label for="app-loan-purpose">Purpose of Loan *</label>
+                  <textarea 
+                    id="app-loan-purpose" 
+                    name="loanPurpose" 
+                    placeholder="Describe your loan purpose"
+                    rows="3"
+                    aria-required="true"
+                  ></textarea>
+                  <span class="error-message" id="loanPurpose-error"></span>
+                </div>
+              </fieldset>
+
+              <!-- Step 3: Review -->
+              <fieldset class="form-step" data-step="3" id="step-3">
+                <legend><h2>Review & Confirm</h2></legend>
+                
+                <div class="review-summary" id="review-summary">
+                  <!-- Summary will be populated here -->
+                </div>
+
+                <div class="form-group checkbox-group">
+                  <input 
+                    type="checkbox" 
+                    id="app-terms" 
+                    name="agreeTerms" 
+                    required 
+                    aria-required="true"
+                  >
+                  <label for="app-terms">
+                    I agree to the Terms and Conditions and Privacy Policy
+                  </label>
+                  <span class="error-message" id="agreeTerms-error"></span>
+                </div>
+
+                <div class="form-group checkbox-group">
+                  <input 
+                    type="checkbox" 
+                    id="app-consent" 
+                    name="dataConsent" 
+                    required 
+                    aria-required="true"
+                  >
+                  <label for="app-consent">
+                    I consent to share my information with our partners for loan processing
+                  </label>
+                  <span class="error-message" id="dataConsent-error"></span>
+                </div>
+              </fieldset>
+
+              <!-- Form Navigation -->
+              <div class="form-navigation">
+                <button type="button" class="btn btn-outline" id="prev-step" style="display: none;">
+                  ← Back
+                </button>
+                <button type="button" class="btn btn-primary" id="next-step">
+                  Continue →
+                </button>
+                <button type="submit" class="btn btn-primary" id="submit-application" style="display: none;">
+                  <span class="btn-text">Submit Application</span>
+                  <span class="btn-loader" style="display: none;">Submitting...</span>
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Application Guide -->
+          <div class="application-guide">
+            <h3>Application Tips</h3>
+            <ul>
+              <li><strong>Accuracy:</strong> Provide accurate information for faster processing</li>
+              <li><strong>Documents:</strong> Keep your documents ready after submission</li>
+              <li><strong>Verification:</strong> We'll contact you within 2 hours to verify details</li>
+              <li><strong>Approval:</strong> Instant pre-approval for eligible candidates</li>
+              <li><strong>Disbursement:</strong> Funds transferred within 24 hours of approval</li>
+            </ul>
+
+            <div class="info-box">
+              <h4>💡 Quick Fact</h4>
+              <p>94% of applications from existing customers are approved within 1 hour!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Success/Error Toast -->
+      <div id="toast" class="toast" role="alert" aria-hidden="true"></div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-section">
+          <h4>LendSwift AI</h4>
+          <p>Smart lending platform with AI-powered eligibility analysis.</p>
+        </div>
+        <div class="footer-section">
+          <h4>Quick Links</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="loan-types.html">Loan Types</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-section">
+          <h4>Contact</h4>
+          <p>Email: support@lendswift.com<br>Phone: +91 1800-LEND-SWIFT</p>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2026 LendSwift AI. All rights reserved.</p>
+      </div>
+    </footer>
+
+    <script src="js/auth-storage.js"></script>
+    <script src="js/auth-check.js"></script>
+    <script src="js/toast.js"></script>
+    <script src="js/apply-loan.js"></script>
+    <script src="js/navbar.js"></script>
+    <script>
+      // Protect this route - redirect if not authenticated
+      document.addEventListener('DOMContentLoaded', async function() {
+        const isAuth = await AuthCheck.isAuthenticated();
+        if (!isAuth) {
+          showToast('Please login to access the loan application.', 'warning');
+          setTimeout(() => {
+            AuthCheck.redirectToLogin('You must login to apply for a loan.');
+          }, 1500);
+        }
+      });
+    </script>
+  </body>
+</html>
